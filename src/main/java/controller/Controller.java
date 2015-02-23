@@ -1,10 +1,12 @@
 package controller;
 
+import javafx.util.Pair;
 import template.BaseServer;
 
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.List;
 
 /**
  * ***************************************************************
@@ -24,11 +26,14 @@ public class Controller extends BaseServer {
         super();
     }
 
-    public void addServer(InetAddress addr) {
-        topology.add(addr);
+    public void addServer(InetAddress addr, int port) {
+        topology.add(addr, port);
     }
 
-
+    public Pair<InetAddress, Integer> getLastServer() {
+        List<Pair<InetAddress, Integer>> serverList = topology.getServerList();
+        return serverList.get(serverList.size() - 1);
+    }
     public static void main(String[] args) {
         try {
             Controller controller = new Controller();

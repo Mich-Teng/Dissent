@@ -1,5 +1,7 @@
 package controller;
 
+import javafx.util.Pair;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +17,17 @@ import java.util.List;
  */
 
 public class Topology {
-    List<InetAddress> serverList = new ArrayList<InetAddress>();
+    List<Pair<InetAddress, Integer>> serverList = new ArrayList<Pair<InetAddress, Integer>>();
 
-    public void add(InetAddress addr) {
-        serverList.add(addr);
+    public void add(InetAddress addr, int port) {
+        serverList.add(new Pair<InetAddress, Integer>(addr, port));
+    }
+
+    public int size() {
+        return serverList.size();
+    }
+
+    public List<Pair<InetAddress, Integer>> getServerList() {
+        return serverList;
     }
 }

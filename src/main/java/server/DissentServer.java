@@ -1,5 +1,6 @@
 package server;
 
+import javafx.util.Pair;
 import proto.EventMsg;
 import proto.EventType;
 import template.BaseServer;
@@ -9,6 +10,7 @@ import util.Utilities;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -32,8 +34,10 @@ public class DissentServer extends BaseServer {
     private CommutativeElGamal commutativeElGamal = new CommutativeElGamal();
     // whether the server connects with controller or not
     private boolean connected = false;
-    private String controllerIp = "";
+    private String controllerIp = null;
     private int controllerPort = 0;
+    // next hop server: ip:port
+    private Pair<InetAddress, Integer> nextHop = null;
 
     public DissentServer() throws SocketException, UnknownHostException {
         super();
@@ -54,6 +58,7 @@ public class DissentServer extends BaseServer {
             prop.load(new FileInputStream("server.properties"));
             controllerPort = Integer.parseInt(prop.getProperty("CONTROLLER_PORT"));
             controllerIp = prop.getProperty("CONTROLLER_IP");
+            nextHop = new Pair<InetAddress, Integer>(InetAddress.getByName(controllerIp), controllerPort);
         } catch (IOException e) {
             System.out.print("Unable to load controller.properties. We will use default configuration");
         }
@@ -65,6 +70,14 @@ public class DissentServer extends BaseServer {
 
     public void setConnected(boolean connected) {
         this.connected = connected;
+    }
+
+    public Pair<InetAddress, Integer> getNextHop() {
+        return nextHop;
+    }
+
+    public void setNextHop(Pair<InetAddress, Integer> nextHop) {
+        this.nextHop = nextHop;
     }
 
     public static void main(String[] args) {
