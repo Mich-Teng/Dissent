@@ -1,12 +1,11 @@
 package controller;
 
-import controller.handler.ControllerHandler;
-import proto.EventMsg;
-import proto.EventType;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import controller.handler.ServerRegisterHandler;
+import proto.EventType;
+import template.BaseServerListener;
+import template.Handler;
+
 
 /**
  * ***************************************************************
@@ -18,33 +17,15 @@ import java.net.InetAddress;
  * ****************************************************************
  */
 
-public class ControllerListener implements Runnable {
-    private Controller controller = null;
-    private byte[] buffer = new byte[4096];
+public class ControllerListener extends BaseServerListener {
 
     public ControllerListener(Controller controller) {
-        this.controller = controller;
+        super(controller);
     }
 
     @Override
-    public void run() {
-        DatagramSocket socket = controller.getSocket();
-        ControllerHandler[] handlers = new ControllerHandler[EventType.EVENT_NUM];
-        assignHandlers(handlers);
-        while (true) {
-            try {
-                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-                socket.receive(packet);
-                EventMsg eventMsg = new EventMsg(packet.getData());
-                InetAddress srcAddr = packet.getAddress();
-                handlers[eventMsg.getEventType()].execute(eventMsg, controller, srcAddr);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void assignHandlers(ControllerHandler[] handlers) {
-
+    protected void assignHandlers(Handler[] handlers) {
+        // assign the handlers for controller
+        handlers[EventType.SERVER_REGISTER] = new ServerRegisterHandler();
     }
 }

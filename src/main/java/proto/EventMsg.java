@@ -19,8 +19,15 @@ public class EventMsg implements Serializable {
     private String origin = null;
     Map<String, Object> map = new HashMap<String, Object>();
 
+    // deserialize a byte array into a event msg
     public EventMsg(byte[] arr) {
         // todo
+    }
+
+    public EventMsg(int eventType, String origin, Map<String, Object> map) {
+        this.eventType = eventType;
+        this.origin = origin;
+        this.map = map;
     }
 
     public int getEventType() {
@@ -30,5 +37,6 @@ public class EventMsg implements Serializable {
     public Object getField(String fieldName) {
         return map.get(fieldName);
     }
+
 
 }

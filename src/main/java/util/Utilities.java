@@ -1,9 +1,8 @@
 package util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -60,5 +59,29 @@ public class Utilities {
 
         }
         return null;
+    }
+
+    public static void send(DatagramSocket socket, byte[] content, String ip, int port) {
+        try {
+            DatagramPacket sendPacket = new DatagramPacket(content, content.length,
+                    InetAddress.getByName(ip), port);
+            socket.send(sendPacket);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void send(DatagramSocket socket, byte[] content, InetAddress ip, int port) {
+        try {
+            DatagramPacket sendPacket = new DatagramPacket(content, content.length,
+                    ip, port);
+            socket.send(sendPacket);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

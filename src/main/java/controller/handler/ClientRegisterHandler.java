@@ -2,6 +2,8 @@ package controller.handler;
 
 import controller.Controller;
 import proto.EventMsg;
+import template.BaseServer;
+import template.Handler;
 
 import java.net.InetAddress;
 
@@ -15,9 +17,9 @@ import java.net.InetAddress;
  * ****************************************************************
  */
 
-public class ClientRegisterHandler implements ControllerHandler {
+public class ClientRegisterHandler implements Handler {
     @Override
-    public void execute(EventMsg eventMsg, Controller controller, InetAddress srcAddr) {
-
+    public void execute(EventMsg eventMsg, BaseServer baseServer, InetAddress srcAddr, int srcPort) {
+        Controller controller = (Controller) baseServer;
     }
 }

@@ -1,8 +1,19 @@
 package server;
 
+import proto.EventMsg;
+import proto.EventType;
+import template.BaseServer;
+import util.CommutativeElGamal;
+import util.Utilities;
+
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * ***************************************************************
@@ -14,25 +25,66 @@ import java.util.Map;
  * ****************************************************************
  */
 
-public class DissentServer {
+public class DissentServer extends BaseServer {
     // <public key of client, encrypted reputation>
-    Map<BigInteger, BigInteger> reputationMap = new HashMap<BigInteger, BigInteger>();
-    private BigInteger g = null;
-    private BigInteger privateKey = null;
-    private BigInteger publicKey = null;
+    private Map<BigInteger, BigInteger> reputationMap = new HashMap<BigInteger, BigInteger>();
+    // which contains g, private key, id and public key
+    private CommutativeElGamal commutativeElGamal = new CommutativeElGamal();
+    // whether the server connects with controller or not
+    private boolean connected = false;
+    private String controllerIp = "";
+    private int controllerPort = 0;
 
-    public DissentServer() {
-        // load g from Config file
-        // generate private key
-        // generate public key
-        // register itself to Master
+    public DissentServer() throws SocketException, UnknownHostException {
+        super();
+        loadControllerProperties();
     }
 
-    public void announce() {
+    /**
+     * register itself to controller
+     */
+    public void register() {
+        EventMsg eventMsg = new EventMsg(EventType.SERVER_REGISTER, identifier, new HashMap<String, Object>());
+        Utilities.send(socket, Utilities.serialize(eventMsg), controllerIp, controllerPort);
+    }
 
+    void loadControllerProperties() {
+        Properties prop = new Properties();
+        try {
+            prop.load(new FileInputStream("server.properties"));
+            controllerPort = Integer.parseInt(prop.getProperty("CONTROLLER_PORT"));
+            controllerIp = prop.getProperty("CONTROLLER_IP");
+        } catch (IOException e) {
+            System.out.print("Unable to load controller.properties. We will use default configuration");
+        }
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
     }
 
     public static void main(String[] args) {
+        try {
+            DissentServer dissentServer = new DissentServer();
+            dissentServer.register();
+            for (int i = 0; i < 10; i++) {
+                Thread.sleep(1000);
+                if (dissentServer.isConnected())
+                    break;
+            }
+            if (!dissentServer.isConnected()) {
+                System.out.println("Fails to connect with controller. Please check the configuration");
+                System.exit(1);
+            }
+            ServerListener serverListener = new ServerListener(dissentServer);
+            serverListener.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }

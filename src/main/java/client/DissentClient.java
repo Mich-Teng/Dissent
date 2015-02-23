@@ -1,5 +1,7 @@
 package client;
 
+import util.ElGamal;
+
 import java.math.BigInteger;
 
 /**
@@ -15,20 +17,21 @@ import java.math.BigInteger;
 public class DissentClient {
     private BigInteger privateKey = null;
     private BigInteger publicKey = null;
-    private BigInteger g = null;
 
 
     public DissentClient() {
         // generate private key
+        ElGamal elGamal = new ElGamal();
+        privateKey = elGamal.getPrivateKey();
+        publicKey = elGamal.getPublicKey();
     }
 
     /**
      * register dissent client to the server side
      */
     public void register() {
-        // request server side to return g
-        // generate public key
         // send public key to server
+
     }
 
     public static void main(String[] args) {

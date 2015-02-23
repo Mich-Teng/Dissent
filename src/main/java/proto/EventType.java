@@ -13,6 +13,7 @@ package proto;
 public class EventType {
     public static final int EVENT_NUM = 10;
     // client -> server: request g
-    public static final int REQUEST_G = 1;
+    public static final int SERVER_REGISTER = 1;
+    public static final int SERVER_REGISTER_REPLY = 2;
 
 }
