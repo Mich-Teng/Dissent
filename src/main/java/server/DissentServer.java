@@ -41,13 +41,13 @@ public class DissentServer extends BaseServer {
 
     public DissentServer() throws SocketException, UnknownHostException {
         super();
-        loadControllerProperties();
     }
 
     /**
      * register itself to controller
      */
     public void register() {
+        loadControllerProperties();
         EventMsg eventMsg = new EventMsg(EventType.SERVER_REGISTER, identifier, new HashMap<String, Object>());
         Utilities.send(socket, Utilities.serialize(eventMsg), controllerIp, controllerPort);
     }
