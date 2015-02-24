@@ -4,13 +4,9 @@ import util.Utilities;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -24,7 +20,6 @@ import java.util.Properties;
  */
 
 public class BaseServer {
-    private Map<BigInteger, InetAddress> clientAddr = new HashMap<BigInteger, InetAddress>();
     protected DatagramSocket socket = null;
     protected int localPort = 12345;
     protected String identifier = null;

@@ -3,10 +3,13 @@ package controller;
 import javafx.util.Pair;
 import template.BaseServer;
 
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ***************************************************************
@@ -20,6 +23,7 @@ import java.util.List;
 
 public class Controller extends BaseServer {
     private Topology topology = new Topology();
+    private Map<BigInteger, Pair<InetAddress, Integer>> clientAddr = new HashMap<BigInteger, Pair<InetAddress, Integer>>();
 
 
     public Controller() throws SocketException, UnknownHostException {
@@ -34,6 +38,16 @@ public class Controller extends BaseServer {
         List<Pair<InetAddress, Integer>> serverList = topology.getServerList();
         return serverList.get(serverList.size() - 1);
     }
+
+    public Pair<InetAddress, Integer> getFirstServer() {
+        List<Pair<InetAddress, Integer>> serverList = topology.getServerList();
+        return serverList.get(0);
+    }
+
+    public void addClient(BigInteger publicKey, Pair<InetAddress, Integer> client) {
+        clientAddr.put(publicKey, client);
+    }
+
     public static void main(String[] args) {
         try {
             Controller controller = new Controller();
@@ -43,4 +57,6 @@ public class Controller extends BaseServer {
             e.printStackTrace();
         }
     }
+
+
 }

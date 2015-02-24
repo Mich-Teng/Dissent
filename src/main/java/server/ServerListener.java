@@ -1,6 +1,7 @@
 package server;
 
 import proto.EventType;
+import server.handler.ClientRegisterServerHandler;
 import server.handler.ConfirmationHandler;
 import server.handler.NextHopHandler;
 import template.BaseServerListener;
@@ -28,5 +29,6 @@ public class ServerListener extends BaseServerListener {
         // assign the handlers for dissent server
         handlers[EventType.SERVER_REGISTER_REPLY] = new ConfirmationHandler();
         handlers[EventType.UPDATE_NEXT_HOP] = new NextHopHandler();
+        handlers[EventType.CLIENT_REGISTER_SERVERSIDE] = new ClientRegisterServerHandler();
     }
 }

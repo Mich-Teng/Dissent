@@ -16,6 +16,7 @@ public class EventType {
     public static final int SERVER_REGISTER = 1;
     public static final int SERVER_REGISTER_REPLY = 2;
     public static final int UPDATE_NEXT_HOP = 3;
-    public static final int CLIENT_REGISTER = 4;
+    public static final int CLIENT_REGISTER_CONTROLLERSIDE = 4;
+    public static final int CLIENT_REGISTER_SERVERSIDE = 4;
 
 }

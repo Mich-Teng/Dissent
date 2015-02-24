@@ -64,6 +64,9 @@ public class DissentServer extends BaseServer {
         }
     }
 
+    public BigInteger encrypt(BigInteger data) {
+        return commutativeElGamal.encrypt(data)[2];
+    }
     public boolean isConnected() {
         return connected;
     }
