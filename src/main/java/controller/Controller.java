@@ -48,6 +48,15 @@ public class Controller extends BaseServer {
         clientAddr.put(publicKey, client);
     }
 
+    public Pair<InetAddress, Integer> getClientAddr(BigInteger publicKey) {
+        return clientAddr.get(publicKey);
+    }
+
+    public List<Pair<InetAddress, Integer>> getServerList() {
+        return topology.getServerList();
+    }
+
+
     public static void main(String[] args) {
         try {
             Controller controller = new Controller();

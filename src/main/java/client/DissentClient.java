@@ -48,7 +48,7 @@ public class DissentClient extends BaseServer {
         // send public key to server
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("public_key", publicKey);
-        EventMsg eventMsg = new EventMsg(EventType.CLIENT_REGISTER, identifier, map);
+        EventMsg eventMsg = new EventMsg(EventType.CLIENT_REGISTER_CONTROLLERSIDE, identifier, map);
         Utilities.send(socket, Utilities.serialize(eventMsg), controllerIp, controllerPort);
     }
 

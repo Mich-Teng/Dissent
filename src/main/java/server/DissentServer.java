@@ -67,6 +67,7 @@ public class DissentServer extends BaseServer {
     public BigInteger encrypt(BigInteger data) {
         return commutativeElGamal.encrypt(data)[2];
     }
+
     public boolean isConnected() {
         return connected;
     }
@@ -81,6 +82,10 @@ public class DissentServer extends BaseServer {
 
     public void setNextHop(Pair<InetAddress, Integer> nextHop) {
         this.nextHop = nextHop;
+    }
+
+    public void addIntoReputationMap(BigInteger publicKey, BigInteger rep) {
+        reputationMap.put(publicKey, rep);
     }
 
     public static void main(String[] args) {

@@ -38,5 +38,9 @@ public class EventMsg implements Serializable {
         return map.get(fieldName);
     }
 
+    public Map<String, Object> getMap() {
+        return map;
+    }
+
 
 }
