@@ -59,6 +59,12 @@ public class Controller extends BaseServer {
         return topology.getServerList();
     }
 
+    public Map<BigInteger, Pair<InetAddress, Integer>> getClientList() {
+        return clientAddr;
+    }
+
+
+
     /**
      * start announce phase
      */

@@ -21,4 +21,6 @@ public class EventType {
     public static final int CLIENT_REGISTER_CONFIRMATION = 6;
     public static final int ADD_NEWCLIENT = 7;
     public static final int ANNOUNCEMENT = 8;
+    public static final int SYNC_REPMAP = 9;
+    public static final int MESSAGE = 10;
 }

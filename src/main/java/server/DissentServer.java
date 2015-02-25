@@ -88,7 +88,7 @@ public class DissentServer extends BaseServer {
         return commutativeElGamal.decrypt(data);
     }
 
-    public BigInteger rsaEncrypt(BigInteger data) {
+    public BigInteger rsaEncrypt(BigInteger data, BigInteger p) {
         return data.modPow(r, p);
     }
 
@@ -120,16 +120,21 @@ public class DissentServer extends BaseServer {
         this.r = r;
     }
 
-    public BigInteger getP() {
-        return p;
-    }
 
-    public void setP(BigInteger p) {
+    public void setPrime(BigInteger p) {
         this.p = p;
     }
 
     public Map<BigInteger, BigInteger> getReputationMap() {
         return reputationMap;
+    }
+
+    public void setReputationMap(Map<BigInteger, BigInteger> reputationMap) {
+        this.reputationMap = reputationMap;
+    }
+
+    public BigInteger getPrime() {
+        return p;
     }
 
     public static void main(String[] args) {

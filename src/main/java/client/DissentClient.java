@@ -28,6 +28,10 @@ import java.util.Properties;
 public class DissentClient extends BaseServer {
     private BigInteger privateKey = null;
     private BigInteger publicKey = null;
+    // current round's nym
+    private BigInteger oneTimePseudonym = null;
+    // current round's g
+    private BigInteger g = null;
 
     private String controllerIp = null;
     private int controllerPort = 0;
@@ -61,6 +65,38 @@ public class DissentClient extends BaseServer {
         } catch (IOException e) {
             System.out.print("Unable to load controller.properties. We will use default configuration");
         }
+    }
+
+    public BigInteger getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(BigInteger publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public BigInteger getPrivateKey() {
+        return privateKey;
+    }
+
+    public void setPrivateKey(BigInteger privateKey) {
+        this.privateKey = privateKey;
+    }
+
+    public BigInteger getOneTimePseudonym() {
+        return oneTimePseudonym;
+    }
+
+    public void setOneTimePseudonym(BigInteger oneTimePseudonym) {
+        this.oneTimePseudonym = oneTimePseudonym;
+    }
+
+    public BigInteger getG() {
+        return g;
+    }
+
+    public void setG(BigInteger g) {
+        this.g = g;
     }
 
     public static void main(String[] args) {

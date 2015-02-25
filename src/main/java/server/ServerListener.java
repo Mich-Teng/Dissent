@@ -1,9 +1,7 @@
 package server;
 
 import proto.EventType;
-import server.handler.ClientRegisterServerHandler;
-import server.handler.ConfirmationHandler;
-import server.handler.NextHopHandler;
+import server.handler.*;
 import template.BaseServerListener;
 import template.Handler;
 
@@ -30,5 +28,8 @@ public class ServerListener extends BaseServerListener {
         handlers[EventType.SERVER_REGISTER_REPLY] = new ConfirmationHandler();
         handlers[EventType.UPDATE_NEXT_HOP] = new NextHopHandler();
         handlers[EventType.CLIENT_REGISTER_SERVERSIDE] = new ClientRegisterServerHandler();
+        handlers[EventType.SYNC_REPMAP] = new SyncRepHandler();
+        handlers[EventType.UPDATE_NEXT_HOP] = new NextHopHandler();
+        handlers[EventType.ADD_NEWCLIENT] = new AddClientHandler();
     }
 }

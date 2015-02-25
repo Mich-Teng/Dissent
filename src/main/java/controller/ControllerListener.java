@@ -1,6 +1,7 @@
 package controller;
 
 
+import controller.handler.AnnouncementHandler;
 import controller.handler.ClientRegisterHandler;
 import controller.handler.ClientRegisterPublisher;
 import controller.handler.ServerRegisterHandler;
@@ -31,5 +32,6 @@ public class ControllerListener extends BaseServerListener {
         handlers[EventType.SERVER_REGISTER] = new ServerRegisterHandler();
         handlers[EventType.CLIENT_REGISTER_CONTROLLERSIDE] = new ClientRegisterHandler();
         handlers[EventType.CLIENT_REGISTER_SERVERSIDE] = new ClientRegisterPublisher();
+        handlers[EventType.ANNOUNCEMENT] = new AnnouncementHandler();
     }
 }

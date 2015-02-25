@@ -1,5 +1,6 @@
 package client;
 
+import client.handler.AnnouncementHandler;
 import client.handler.RegisterConfirmationHandler;
 import proto.EventType;
 import template.BaseServerListener;
@@ -24,5 +25,6 @@ public class ClientListener extends BaseServerListener {
     protected void assignHandlers(Handler[] handlers) {
         // assign the handlers for controller
         handlers[EventType.CLIENT_REGISTER_CONFIRMATION] = new RegisterConfirmationHandler();
+        handlers[EventType.ANNOUNCEMENT] = new AnnouncementHandler();
     }
 }
