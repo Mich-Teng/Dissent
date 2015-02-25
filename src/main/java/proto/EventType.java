@@ -20,5 +20,4 @@ public class EventType {
     public static final int CLIENT_REGISTER_SERVERSIDE = 5;
     public static final int CLIENT_REGISTER_CONFIRMATION = 6;
     public static final int ADD_NEWCLIENT = 7;
-    public static final int CLIENT_REGISTER_CONFIRMATION = 8;
 }
