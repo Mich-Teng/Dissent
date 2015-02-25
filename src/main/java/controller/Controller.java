@@ -1,7 +1,10 @@
 package controller;
 
 import javafx.util.Pair;
+import proto.EventMsg;
+import proto.EventType;
 import template.BaseServer;
+import util.Utilities;
 
 import java.math.BigInteger;
 import java.net.InetAddress;
@@ -54,6 +57,15 @@ public class Controller extends BaseServer {
 
     public List<Pair<InetAddress, Integer>> getServerList() {
         return topology.getServerList();
+    }
+
+    /**
+     * start announce phase
+     */
+    public void announce() {
+        Pair<InetAddress, Integer> des = getFirstServer();
+        EventMsg eventMsg = new EventMsg(EventType.ANNOUNCEMENT, identifier, new HashMap<String, Object>());
+        Utilities.send(socket, Utilities.serialize(eventMsg), des.getKey(), des.getValue());
     }
 
 

@@ -5,6 +5,7 @@ import proto.EventMsg;
 import proto.EventType;
 import template.BaseServer;
 import util.CommutativeElGamal;
+import util.ElGamal;
 import util.Utilities;
 
 import java.io.FileInputStream;
@@ -38,9 +39,24 @@ public class DissentServer extends BaseServer {
     private int controllerPort = 0;
     // next hop server: ip:port
     private Pair<InetAddress, Integer> nextHop = null;
+    // random private key for each round
+    private BigInteger r = null;
+    // big prime number
+    private BigInteger p = null;
+    // generator
+    private BigInteger g = null;
+
 
     public DissentServer() throws SocketException, UnknownHostException {
         super();
+        ElGamal elGamal = new ElGamal();
+        r = elGamal.getPrivateKey();
+        p = elGamal.getPrime();
+        g = elGamal.getGenerator();
+    }
+
+    public BigInteger getGenerator() {
+        return g;
     }
 
     /**
@@ -68,6 +84,14 @@ public class DissentServer extends BaseServer {
         return commutativeElGamal.encrypt(data)[2];
     }
 
+    public BigInteger decrypt(BigInteger data) {
+        return commutativeElGamal.decrypt(data);
+    }
+
+    public BigInteger rsaEncrypt(BigInteger data) {
+        return data.modPow(r, p);
+    }
+
     public boolean isConnected() {
         return connected;
     }
@@ -86,6 +110,26 @@ public class DissentServer extends BaseServer {
 
     public void addIntoReputationMap(BigInteger publicKey, BigInteger rep) {
         reputationMap.put(publicKey, rep);
+    }
+
+    public BigInteger getR() {
+        return r;
+    }
+
+    public void setR(BigInteger r) {
+        this.r = r;
+    }
+
+    public BigInteger getP() {
+        return p;
+    }
+
+    public void setP(BigInteger p) {
+        this.p = p;
+    }
+
+    public Map<BigInteger, BigInteger> getReputationMap() {
+        return reputationMap;
     }
 
     public static void main(String[] args) {

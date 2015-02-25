@@ -236,4 +236,9 @@ public class CommutativeElGamal extends ElGamal {
         return super.decrypt(decryptData);
     }
 
+    public BigInteger decrypt(BigInteger data) {
+        BigInteger[] ints = {getPublicKey(), data};
+        return decrypt(ints);
+    }
+
 }
