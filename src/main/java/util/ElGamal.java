@@ -159,7 +159,7 @@ public class ElGamal {
         return ret;
     }
 
-    public boolean verify(BigInteger publicKey, BigInteger data, BigInteger r, BigInteger s, BigInteger g, BigInteger p) {
+    public static boolean verify(BigInteger publicKey, BigInteger data, BigInteger r, BigInteger s, BigInteger g, BigInteger p) {
         return g.modPow(data, p).equals(publicKey.modPow(r, p).multiply(r.modPow(s, p)));
     }
 

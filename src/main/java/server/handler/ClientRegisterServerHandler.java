@@ -33,6 +33,8 @@ public class ClientRegisterServerHandler implements Handler {
         // get the public key and entrypted reputation
         BigInteger publicKey = (BigInteger) eventMsg.getField("public_key");
         BigInteger reputation = (BigInteger) eventMsg.getField("reputation");
+        Pair<InetAddress, Integer> addr = (Pair<InetAddress, Integer>) eventMsg.getField("addr");
+        dissentServer.addClient(publicKey, addr);
         // commutative encrypt it and send it to next server
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("public_key", publicKey);

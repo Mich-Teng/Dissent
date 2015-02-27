@@ -35,6 +35,7 @@ public class ClientRegisterPublisher implements Handler {
         Pair<InetAddress, Integer> clientAddr = controller.getClientAddr(publicKey);
         Utilities.send(socket, Utilities.serialize(clientMsg), clientAddr.getKey(), clientAddr.getValue());
 
+        eventMsg.add("addr", clientAddr);
         // sync data to all the servers
         EventMsg serverMsg = new EventMsg(EventType.ADD_NEWCLIENT, controller.getIdentifier(), eventMsg.getMap());
         List<Pair<InetAddress, Integer>> serverList = controller.getServerList();

@@ -42,5 +42,13 @@ public class EventMsg implements Serializable {
         return map;
     }
 
+    public void add(String key, Object val) {
+        map.put(key, val);
+    }
+
+    public void remove(String key) {
+        map.remove(key);
+    }
+
 
 }

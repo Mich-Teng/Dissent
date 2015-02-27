@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -26,8 +27,6 @@ import java.util.Properties;
  */
 
 public class DissentClient extends BaseServer {
-    private BigInteger privateKey = null;
-    private BigInteger publicKey = null;
     // current round's nym
     private BigInteger oneTimePseudonym = null;
     // current round's g
@@ -36,12 +35,12 @@ public class DissentClient extends BaseServer {
     private String controllerIp = null;
     private int controllerPort = 0;
 
+    ElGamal elGamal = new ElGamal();
+
 
     public DissentClient() throws SocketException, UnknownHostException {
         // generate private key
-        ElGamal elGamal = new ElGamal();
-        privateKey = elGamal.getPrivateKey();
-        publicKey = elGamal.getPublicKey();
+        elGamal = new ElGamal();
     }
 
     /**
@@ -51,7 +50,7 @@ public class DissentClient extends BaseServer {
         loadClientProperties();
         // send public key to server
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("public_key", publicKey);
+        map.put("public_key", getPublicKey());
         EventMsg eventMsg = new EventMsg(EventType.CLIENT_REGISTER_CONTROLLERSIDE, identifier, map);
         Utilities.send(socket, Utilities.serialize(eventMsg), controllerIp, controllerPort);
     }
@@ -68,20 +67,14 @@ public class DissentClient extends BaseServer {
     }
 
     public BigInteger getPublicKey() {
-        return publicKey;
+        return elGamal.getPublicKey();
     }
 
-    public void setPublicKey(BigInteger publicKey) {
-        this.publicKey = publicKey;
-    }
 
     public BigInteger getPrivateKey() {
-        return privateKey;
+        return elGamal.getPrivateKey();
     }
 
-    public void setPrivateKey(BigInteger privateKey) {
-        this.privateKey = privateKey;
-    }
 
     public BigInteger getOneTimePseudonym() {
         return oneTimePseudonym;
@@ -101,12 +94,31 @@ public class DissentClient extends BaseServer {
 
     public void sendMsg(String text) {
         // use private key to encrypt message and the server can use one-time pseudonym to decrypt
-        // send data to controller
-        // todo
+        // currently use sha256
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(text.getBytes("UTF-8"));
+            BigInteger data = new BigInteger(1, hash);
+            BigInteger[] signature = elGamal.sign(data);
+            // send data to controller
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("signature", signature);
+            map.put("text", text);
+            map.put("nym", oneTimePseudonym);
+            EventMsg msg = new EventMsg(EventType.MESSAGE, identifier, map);
+            Utilities.send(socket, Utilities.serialize(msg), controllerIp, controllerPort);
+        } catch (Exception e) {
+            System.out.println("Fails to send Message!");
+            e.printStackTrace();
+        }
     }
 
     public void vote(Integer msgId, Integer score) {
         // todo
+    }
+
+    public ElGamal getElGamal() {
+        return elGamal;
     }
 
     public static void main(String[] args) {

@@ -1,12 +1,18 @@
 package template;
 
+import javafx.util.Pair;
+import util.ElGamal;
 import util.Utilities;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -24,6 +30,9 @@ public class BaseServer {
     protected int localPort = 12345;
     protected String identifier = null;
     protected String localIp = null;
+    private Map<BigInteger, Pair<InetAddress, Integer>> clientAddr = new HashMap<BigInteger, Pair<InetAddress, Integer>>();
+    // big prime number
+    private final BigInteger p = ElGamal.prime1024;
 
     public BaseServer() throws SocketException, UnknownHostException {
         loadProperties();
@@ -45,8 +54,24 @@ public class BaseServer {
         }
     }
 
+    public void addClient(BigInteger publicKey, Pair<InetAddress, Integer> client) {
+        clientAddr.put(publicKey, client);
+    }
+
+    public Map<BigInteger, Pair<InetAddress, Integer>> getClientList() {
+        return clientAddr;
+    }
+
+    public Pair<InetAddress, Integer> getClientAddr(BigInteger publicKey) {
+        return clientAddr.get(publicKey);
+    }
+
     public DatagramSocket getSocket() {
         return socket;
+    }
+
+    public BigInteger getPrime() {
+        return p;
     }
 
     public int getLocalPort() {

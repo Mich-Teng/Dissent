@@ -41,8 +41,6 @@ public class DissentServer extends BaseServer {
     private Pair<InetAddress, Integer> nextHop = null;
     // random private key for each round
     private BigInteger r = null;
-    // big prime number
-    private BigInteger p = null;
     // generator
     private BigInteger g = null;
 
@@ -51,7 +49,6 @@ public class DissentServer extends BaseServer {
         super();
         ElGamal elGamal = new ElGamal();
         r = elGamal.getPrivateKey();
-        p = elGamal.getPrime();
         g = elGamal.getGenerator();
     }
 
@@ -120,11 +117,6 @@ public class DissentServer extends BaseServer {
         this.r = r;
     }
 
-
-    public void setPrime(BigInteger p) {
-        this.p = p;
-    }
-
     public Map<BigInteger, BigInteger> getReputationMap() {
         return reputationMap;
     }
@@ -133,9 +125,6 @@ public class DissentServer extends BaseServer {
         this.reputationMap = reputationMap;
     }
 
-    public BigInteger getPrime() {
-        return p;
-    }
 
     public static void main(String[] args) {
         try {

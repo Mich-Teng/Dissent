@@ -1,10 +1,15 @@
 package server.handler;
 
+import javafx.util.Pair;
 import proto.EventMsg;
+import server.DissentServer;
 import template.BaseServer;
 import template.Handler;
+import util.Utilities;
 
+import java.math.BigInteger;
 import java.net.InetAddress;
+import java.util.Collection;
 
 /**
  * ***************************************************************
@@ -19,6 +24,14 @@ import java.net.InetAddress;
 public class ClientMsgHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
+        DissentServer dissentServer = (DissentServer) server;
+        BigInteger nym = (BigInteger) eventMsg.getField("nym");
+        BigInteger rep = dissentServer.getReputationMap().get(nym);
+        eventMsg.add("rep", rep);
         // Currently just send the msg to all the clients with nym and reputation
+        Collection<Pair<InetAddress, Integer>> clients = dissentServer.getClientList().values();
+        for (Pair<InetAddress, Integer> pair : clients) {
+            Utilities.send(dissentServer.getSocket(), Utilities.serialize(eventMsg), pair.getKey(), pair.getValue());
+        }
     }
 }

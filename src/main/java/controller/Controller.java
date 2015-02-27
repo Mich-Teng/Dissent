@@ -10,9 +10,9 @@ import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * ***************************************************************
@@ -26,7 +26,8 @@ import java.util.Map;
 
 public class Controller extends BaseServer {
     private Topology topology = new Topology();
-    private Map<BigInteger, Pair<InetAddress, Integer>> clientAddr = new HashMap<BigInteger, Pair<InetAddress, Integer>>();
+    private BigInteger g = null;
+    List<BigInteger> msgSenderList = new ArrayList<BigInteger>();
 
 
     public Controller() throws SocketException, UnknownHostException {
@@ -47,23 +48,18 @@ public class Controller extends BaseServer {
         return serverList.get(0);
     }
 
-    public void addClient(BigInteger publicKey, Pair<InetAddress, Integer> client) {
-        clientAddr.put(publicKey, client);
+    public Integer addMsgLog(BigInteger oneTimePseunym) {
+        msgSenderList.add(oneTimePseunym);
+        return msgSenderList.size();
     }
 
-    public Pair<InetAddress, Integer> getClientAddr(BigInteger publicKey) {
-        return clientAddr.get(publicKey);
+    public BigInteger getMsgNym(Integer msgId) {
+        return msgSenderList.get(msgId - 1);
     }
 
     public List<Pair<InetAddress, Integer>> getServerList() {
         return topology.getServerList();
     }
-
-    public Map<BigInteger, Pair<InetAddress, Integer>> getClientList() {
-        return clientAddr;
-    }
-
-
 
     /**
      * start announce phase
@@ -74,6 +70,9 @@ public class Controller extends BaseServer {
         Utilities.send(socket, Utilities.serialize(eventMsg), des.getKey(), des.getValue());
     }
 
+    public BigInteger getGenerator() {
+        return g;
+    }
 
     public static void main(String[] args) {
         try {

@@ -1,10 +1,7 @@
 package controller;
 
 
-import controller.handler.AnnouncementHandler;
-import controller.handler.ClientRegisterHandler;
-import controller.handler.ClientRegisterPublisher;
-import controller.handler.ServerRegisterHandler;
+import controller.handler.*;
 import proto.EventType;
 import template.BaseServerListener;
 import template.Handler;
@@ -33,5 +30,6 @@ public class ControllerListener extends BaseServerListener {
         handlers[EventType.CLIENT_REGISTER_CONTROLLERSIDE] = new ClientRegisterHandler();
         handlers[EventType.CLIENT_REGISTER_SERVERSIDE] = new ClientRegisterPublisher();
         handlers[EventType.ANNOUNCEMENT] = new AnnouncementHandler();
+        handlers[EventType.MESSAGE] = new ClientMsgHandler();
     }
 }
