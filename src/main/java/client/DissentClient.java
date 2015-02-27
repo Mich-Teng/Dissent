@@ -99,6 +99,16 @@ public class DissentClient extends BaseServer {
         this.g = g;
     }
 
+    public void sendMsg(String text) {
+        // use private key to encrypt message and the server can use one-time pseudonym to decrypt
+        // send data to controller
+        // todo
+    }
+
+    public void vote(Integer msgId, Integer score) {
+        // todo
+    }
+
     public static void main(String[] args) {
         try {
             DissentClient client = new DissentClient();

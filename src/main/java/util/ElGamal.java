@@ -108,7 +108,6 @@ public class ElGamal {
      */
     public BigInteger[] encrypt(BigInteger publicKey, BigInteger data) {
         BigInteger[] c = new BigInteger[2];
-
         BigInteger y = new BigInteger(p.bitLength() - 1, rng);
         c[0] = g.modPow(y, p);
         c[1] = publicKey.modPow(y, p);
@@ -138,6 +137,30 @@ public class ElGamal {
         s = s.modInverse(p);
         s = s.multiply(c[1]);
         return s.mod(p);
+    }
+
+    public BigInteger[] sign(BigInteger data) {
+        return sign(p, g, privateKey, data);
+    }
+
+    public BigInteger[] sign(BigInteger p, BigInteger g, BigInteger privateKey, BigInteger data) {
+        BigInteger[] ret = new BigInteger[2];
+        BigInteger k = new BigInteger(p.bitLength() - 1, rng);
+        BigInteger one = new BigInteger("1");
+        // gcd(k,p-1) = 1
+        while (!k.gcd(p.subtract(one)).equals(one)) {
+            k = new BigInteger(p.bitLength() - 1, rng);
+        }
+        ret[0] = g.modPow(k, p);
+        // s = k-1(m− xr) mod p−1
+        ret[1] = data.subtract(privateKey.multiply(ret[0]));
+        ret[1] = ret[1].divide(k);
+        ret[1] = ret[1].mod(p);
+        return ret;
+    }
+
+    public boolean verify(BigInteger publicKey, BigInteger data, BigInteger r, BigInteger s, BigInteger g, BigInteger p) {
+        return g.modPow(data, p).equals(publicKey.modPow(r, p).multiply(r.modPow(s, p)));
     }
 
 
