@@ -1,6 +1,7 @@
 package controller.handler;
 
 import controller.Controller;
+import controller.ControllerStatus;
 import javafx.util.Pair;
 import proto.EventMsg;
 import proto.EventType;
@@ -24,6 +25,9 @@ import java.util.Map;
  * ****************************************************************
  */
 
+/**
+ * finish announcement and send start message signal to the clients
+ */
 public class AnnouncementHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
@@ -53,5 +57,6 @@ public class AnnouncementHandler implements Handler {
         for (Pair<InetAddress, Integer> pair : clientList.values()) {
             Utilities.send(controller.getSocket(), Utilities.serialize(clientMsg), pair.getKey(), pair.getValue());
         }
+        controller.setStatus(ControllerStatus.MESSAGE);
     }
 }

@@ -27,6 +27,7 @@ public class Controller extends BaseServer {
     private BigInteger g = null;
     List<BigInteger> msgSenderList = new ArrayList<BigInteger>();
     Map<BigInteger, BigInteger> voteCollect = new HashMap<BigInteger, BigInteger>();
+    private int status = ControllerStatus.CONFIGURATION;
 
 
     public Controller() throws SocketException, UnknownHostException {
@@ -109,10 +110,19 @@ public class Controller extends BaseServer {
         }
     }
 
-
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public BigInteger getGenerator() {
         return g;
+    }
+
+    /**
+     * register all the clients in the buffer
+     */
+    public void register() {
+
     }
 
     public static void main(String[] args) {
@@ -120,6 +130,17 @@ public class Controller extends BaseServer {
             Controller controller = new Controller();
             ControllerListener controllerListener = new ControllerListener(controller);
             controllerListener.run();
+            while (true) {
+                controller.setStatus(ControllerStatus.REGISTER);
+                controller.register();
+                controller.setStatus(ControllerStatus.ANNOUNCE);
+                controller.announce();
+                // 10 secs for msg
+                Thread.sleep(10000);
+                controller.vote();
+                // 10 secs for vote
+                Thread.sleep(10000);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
