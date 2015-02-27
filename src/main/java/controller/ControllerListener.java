@@ -31,5 +31,6 @@ public class ControllerListener extends BaseServerListener {
         handlers[EventType.CLIENT_REGISTER_SERVERSIDE] = new ClientRegisterPublisher();
         handlers[EventType.ANNOUNCEMENT] = new AnnouncementHandler();
         handlers[EventType.MESSAGE] = new ClientMsgHandler();
+        handlers[EventType.VOTE] = new VoteHandler();
     }
 }

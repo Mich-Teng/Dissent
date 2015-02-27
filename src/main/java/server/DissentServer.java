@@ -89,6 +89,10 @@ public class DissentServer extends BaseServer {
         return data.modPow(r, p);
     }
 
+    public BigInteger rsaDecrypt(BigInteger data, BigInteger p) {
+        return data.modPow(r.negate(), p);
+    }
+
     public boolean isConnected() {
         return connected;
     }

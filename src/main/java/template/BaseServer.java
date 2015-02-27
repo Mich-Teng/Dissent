@@ -30,9 +30,9 @@ public class BaseServer {
     protected int localPort = 12345;
     protected String identifier = null;
     protected String localIp = null;
-    private Map<BigInteger, Pair<InetAddress, Integer>> clientAddr = new HashMap<BigInteger, Pair<InetAddress, Integer>>();
+    protected Map<BigInteger, Pair<InetAddress, Integer>> clientAddr = new HashMap<BigInteger, Pair<InetAddress, Integer>>();
     // big prime number
-    private final BigInteger p = ElGamal.prime1024;
+    protected final BigInteger p = ElGamal.prime1024;
 
     public BaseServer() throws SocketException, UnknownHostException {
         loadProperties();

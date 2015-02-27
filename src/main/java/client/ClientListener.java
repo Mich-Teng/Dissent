@@ -1,8 +1,6 @@
 package client;
 
-import client.handler.AnnouncementHandler;
-import client.handler.MsgHandler;
-import client.handler.RegisterConfirmationHandler;
+import client.handler.*;
 import proto.EventType;
 import template.BaseServerListener;
 import template.Handler;
@@ -28,5 +26,7 @@ public class ClientListener extends BaseServerListener {
         handlers[EventType.CLIENT_REGISTER_CONFIRMATION] = new RegisterConfirmationHandler();
         handlers[EventType.ANNOUNCEMENT] = new AnnouncementHandler();
         handlers[EventType.MESSAGE] = new MsgHandler();
+        handlers[EventType.VOTE] = new VoteStartHandler();
+        handlers[EventType.ROUND_END] = new RoundEndHandler();
     }
 }

@@ -31,8 +31,7 @@ public class AnnouncementHandler implements Handler {
         dissentClient.setG(g);
         // print out the msg to suggest user to send msg or vote
         System.out.println("Your One-Time Pseudonym this round is " + oneTimePseudonym);
-        System.out.println("You can send msg or vote now!");
+        System.out.println("You can send message now!");
         System.out.println("msg <msg_text>");
-        System.out.print("vote <msg_id> <+-1>");
     }
 }

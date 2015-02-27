@@ -92,7 +92,7 @@ public class DissentClient extends BaseServer {
         this.g = g;
     }
 
-    public void sendMsg(String text) {
+    public void sendMsg(String text, Integer msgType) {
         // use private key to encrypt message and the server can use one-time pseudonym to decrypt
         // currently use sha256
         try {
@@ -105,7 +105,7 @@ public class DissentClient extends BaseServer {
             map.put("signature", signature);
             map.put("text", text);
             map.put("nym", oneTimePseudonym);
-            EventMsg msg = new EventMsg(EventType.MESSAGE, identifier, map);
+            EventMsg msg = new EventMsg(msgType, identifier, map);
             Utilities.send(socket, Utilities.serialize(msg), controllerIp, controllerPort);
         } catch (Exception e) {
             System.out.println("Fails to send Message!");
@@ -113,8 +113,13 @@ public class DissentClient extends BaseServer {
         }
     }
 
+    public void sendMsg(String text) {
+        sendMsg(text, EventType.MESSAGE);
+    }
+
     public void vote(Integer msgId, Integer score) {
-        // todo
+        // format msgid;score
+        sendMsg(msgId + ";" + score, EventType.VOTE);
     }
 
     public ElGamal getElGamal() {

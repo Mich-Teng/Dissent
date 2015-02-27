@@ -1,5 +1,6 @@
 package server;
 
+import client.handler.RoundEndHandler;
 import proto.EventType;
 import server.handler.*;
 import template.BaseServerListener;
@@ -31,5 +32,7 @@ public class ServerListener extends BaseServerListener {
         handlers[EventType.SYNC_REPMAP] = new SyncRepHandler();
         handlers[EventType.UPDATE_NEXT_HOP] = new NextHopHandler();
         handlers[EventType.ADD_NEWCLIENT] = new AddClientHandler();
+        handlers[EventType.MESSAGE] = new ClientMsgHandler();
+        handlers[EventType.ROUND_END] = new RoundEndHandler();
     }
 }

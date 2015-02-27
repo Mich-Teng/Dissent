@@ -10,9 +10,7 @@ import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * ***************************************************************
@@ -28,6 +26,7 @@ public class Controller extends BaseServer {
     private Topology topology = new Topology();
     private BigInteger g = null;
     List<BigInteger> msgSenderList = new ArrayList<BigInteger>();
+    Map<BigInteger, BigInteger> voteCollect = new HashMap<BigInteger, BigInteger>();
 
 
     public Controller() throws SocketException, UnknownHostException {
@@ -69,6 +68,48 @@ public class Controller extends BaseServer {
         EventMsg eventMsg = new EventMsg(EventType.ANNOUNCEMENT, identifier, new HashMap<String, Object>());
         Utilities.send(socket, Utilities.serialize(eventMsg), des.getKey(), des.getValue());
     }
+
+    /**
+     * start vote phase, actually, if we partition the clients to servers,
+     * we can let server send this signal to clients. Here, for simplicity, we
+     * just send it from controller
+     */
+    public void vote() {
+        EventMsg eventMsg = new EventMsg(EventType.VOTE, identifier, new HashMap<String, Object>());
+        Collection<Pair<InetAddress, Integer>> pairs = clientAddr.values();
+        byte[] content = Utilities.serialize(eventMsg);
+        for (Pair<InetAddress, Integer> pair : pairs) {
+            Utilities.send(socket, content, pair.getKey(), pair.getValue());
+        }
+    }
+
+    /**
+     * round end. wrap up vote and send signal to clients
+     */
+    public void voteEnd() {
+        // send signal to all clients
+        EventMsg eventMsg = new EventMsg(EventType.ROUND_END, identifier, new HashMap<String, Object>());
+        Collection<Pair<InetAddress, Integer>> pairs = clientAddr.values();
+        byte[] content = Utilities.serialize(eventMsg);
+        for (Pair<InetAddress, Integer> pair : pairs) {
+            Utilities.send(socket, content, pair.getKey(), pair.getValue());
+        }
+
+        // send signal to server
+        eventMsg.add("offset", voteCollect);
+        Pair<InetAddress, Integer> firstServer = getFirstServer();
+        Utilities.send(socket, Utilities.serialize(eventMsg), firstServer.getKey(), firstServer.getValue());
+    }
+
+    public void addVote(BigInteger oneTimePseunym, BigInteger vote) {
+        if (!voteCollect.containsKey(oneTimePseunym)) {
+            voteCollect.put(oneTimePseunym, vote);
+        } else {
+            voteCollect.put(oneTimePseunym, voteCollect.get(oneTimePseunym).add(vote));
+        }
+    }
+
+
 
     public BigInteger getGenerator() {
         return g;
