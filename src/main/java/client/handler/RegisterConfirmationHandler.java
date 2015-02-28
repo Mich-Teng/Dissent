@@ -1,5 +1,7 @@
 package client.handler;
 
+import client.ClientStatus;
+import client.DissentClient;
 import proto.EventMsg;
 import template.BaseServer;
 import template.Handler;
@@ -19,8 +21,11 @@ import java.net.InetAddress;
 public class RegisterConfirmationHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
+        DissentClient dissentClient = (DissentClient) server;
+        dissentClient.setStatus(ClientStatus.CONNECTED);
         // simply print out register success info here
         System.out.println("Congratulations! Register successfully!");
         System.out.println("Please wait for the new round to start.");
+
     }
 }

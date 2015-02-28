@@ -1,5 +1,7 @@
 package client.handler;
 
+import client.ClientStatus;
+import client.DissentClient;
 import proto.EventMsg;
 import template.BaseServer;
 import template.Handler;
@@ -19,6 +21,8 @@ import java.net.InetAddress;
 public class RoundEndHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
+        DissentClient dissentClient = (DissentClient) server;
+        dissentClient.setStatus(ClientStatus.CONNECTED);
         System.out.println("This round is ended.");
         System.out.println("Please wait for the next round to start");
     }

@@ -1,5 +1,6 @@
 package client.handler;
 
+import client.ClientStatus;
 import client.DissentClient;
 import proto.EventMsg;
 import template.BaseServer;
@@ -33,5 +34,6 @@ public class AnnouncementHandler implements Handler {
         System.out.println("Your One-Time Pseudonym this round is " + oneTimePseudonym);
         System.out.println("You can send message now!");
         System.out.println("msg <msg_text>");
+        dissentClient.setStatus(ClientStatus.MESSAGE);
     }
 }

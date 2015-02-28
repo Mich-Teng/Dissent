@@ -1,5 +1,7 @@
 package client.handler;
 
+import client.ClientStatus;
+import client.DissentClient;
 import proto.EventMsg;
 import template.BaseServer;
 import template.Handler;
@@ -21,5 +23,7 @@ public class VoteStartHandler implements Handler {
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
         System.out.println("You can vote now!");
         System.out.println("vote <msgid> (+-)1");
+        DissentClient dissentClient = (DissentClient) server;
+        dissentClient.setStatus(ClientStatus.VOTE);
     }
 }

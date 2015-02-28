@@ -15,6 +15,7 @@ import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Scanner;
 
 /**
  * ***************************************************************
@@ -34,6 +35,7 @@ public class DissentClient extends BaseServer {
 
     private String controllerIp = null;
     private int controllerPort = 0;
+    private int status = ClientStatus.CONFIGURATION;
 
     ElGamal elGamal = new ElGamal();
 
@@ -122,6 +124,14 @@ public class DissentClient extends BaseServer {
         sendMsg(msgId + ";" + score, EventType.VOTE);
     }
 
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
     public ElGamal getElGamal() {
         return elGamal;
     }
@@ -130,7 +140,21 @@ public class DissentClient extends BaseServer {
         try {
             DissentClient client = new DissentClient();
             // register client to server cluster
+            client.setStatus(ClientStatus.CONFIGURATION);
             client.register();
+            while (!(client.getStatus() == ClientStatus.MESSAGE))
+                Thread.sleep(500);
+            Scanner scanner = new Scanner(System.in);
+            while (true) {
+                String str = scanner.nextLine();
+                String[] cmdArgs = str.split(" ");
+                if (cmdArgs[0].equals("msg"))
+                    client.sendMsg(cmdArgs[1]);
+                else if (cmdArgs[0].equals("vote"))
+                    client.vote(Integer.parseInt(cmdArgs[1]), Integer.parseInt(cmdArgs[2]));
+                else
+                    throw new IllegalArgumentException();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
