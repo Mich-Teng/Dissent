@@ -46,6 +46,8 @@ public class Controller extends BaseServer {
 
     public Pair<InetAddress, Integer> getFirstServer() {
         List<Pair<InetAddress, Integer>> serverList = topology.getServerList();
+        if (serverList == null || serverList.size() == 0)
+            return null;
         return serverList.get(0);
     }
 
@@ -67,6 +69,8 @@ public class Controller extends BaseServer {
      */
     public void announce() {
         Pair<InetAddress, Integer> des = getFirstServer();
+        if (des == null)
+            return;
         EventMsg eventMsg = new EventMsg(EventType.ANNOUNCEMENT, identifier, new HashMap<String, Object>());
         Utilities.send(socket, Utilities.serialize(eventMsg), des.getKey(), des.getValue());
     }
@@ -136,7 +140,7 @@ public class Controller extends BaseServer {
         try {
             Controller controller = new Controller();
             ControllerListener controllerListener = new ControllerListener(controller);
-            controllerListener.run();
+            new Thread(controllerListener).start();
             controller.setStatus(ControllerStatus.READY_FOR_NEW_ROUND);
             while (true) {
                 for (int i = 0; i < 100; i++) {
@@ -149,6 +153,14 @@ public class Controller extends BaseServer {
                 controller.setStatus(ControllerStatus.ANNOUNCE);
                 System.out.println("Start announcement phase...");
                 controller.announce();
+
+                for (int i = 0; i < 100; i++) {
+                    if (controller.getStatus() == ControllerStatus.MESSAGE)
+                        break;
+                    Thread.sleep(1000);
+                }
+                if (!(controller.getStatus() == ControllerStatus.MESSAGE))
+                    throw new Exception("Fail to be ready for message phase");
                 // 10 secs for msg
                 Thread.sleep(10000);
                 System.out.println("Start voting phase...");
