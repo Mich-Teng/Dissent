@@ -4,7 +4,6 @@ import javafx.util.Pair;
 import util.ElGamal;
 import util.Utilities;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.DatagramSocket;
@@ -47,10 +46,10 @@ public class BaseServer {
     private void loadProperties() {
         Properties prop = new Properties();
         try {
-            prop.load(new FileInputStream("server.properties"));
+            prop.load(getClass().getResourceAsStream("/server.properties"));
             localPort = Integer.parseInt(prop.getProperty("PORT_NUM"));
         } catch (IOException e) {
-            System.out.print("Unable to load controller.properties. We will use default configuration");
+            System.out.println("Unable to load server.properties. We will use default configuration.");
         }
     }
 

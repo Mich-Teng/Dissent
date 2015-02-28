@@ -6,7 +6,6 @@ import template.BaseServer;
 import util.ElGamal;
 import util.Utilities;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.SocketException;
@@ -60,11 +59,11 @@ public class DissentClient extends BaseServer {
     void loadClientProperties() {
         Properties prop = new Properties();
         try {
-            prop.load(new FileInputStream("client.properties"));
+            prop.load(getClass().getResourceAsStream("/client.properties"));
             controllerPort = Integer.parseInt(prop.getProperty("CONTROLLER_PORT"));
             controllerIp = prop.getProperty("CONTROLLER_IP");
         } catch (IOException e) {
-            System.out.print("Unable to load controller.properties. We will use default configuration");
+            System.out.println("Unable to load client.properties. We will use default configuration.");
         }
     }
 
