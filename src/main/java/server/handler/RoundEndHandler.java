@@ -65,9 +65,9 @@ public class RoundEndHandler implements Handler {
         // send data to the next server
         Map<String, Object> repMap = new HashMap<String, Object>();
         repMap.put("g", g);
-        repMap.put("rep_list", repMap);
+        repMap.put("rep_list", newList);
         repMap.put("p", dissentServer.getPrime());
-        EventMsg repMsg = new EventMsg(EventType.ANNOUNCEMENT, dissentServer.getIdentifier(), repMap);
+        EventMsg repMsg = new EventMsg(EventType.ROUND_END, dissentServer.getIdentifier(), repMap);
         Pair<InetAddress, Integer> nextHop = dissentServer.getNextHop();
         Utilities.send(dissentServer.getSocket(), Utilities.serialize(repMsg), nextHop.getKey(), nextHop.getValue());
     }

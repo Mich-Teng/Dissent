@@ -25,7 +25,7 @@ import java.util.Map;
 public class ServerRegisterHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer baseServer, InetAddress srcAddr, int srcPort) {
-        System.out.println("Receive the registration info from server " + srcAddr);
+        System.out.println("Receive the registration info from server " + srcAddr + ":" + srcPort);
         Controller controller = (Controller) baseServer;
         // assume the server is added in the beginning. Otherwise you should transmit
         // some data back

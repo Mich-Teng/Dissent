@@ -52,7 +52,7 @@ public class AnnouncementHandler implements Handler {
         //     clientMap.put("client_list",repMap.keySet());
         clientMap.put("g", eventMsg.getField("g"));
         clientMap.put("p", eventMsg.getField("p"));
-        EventMsg clientMsg = new EventMsg(EventType.MESSAGE, controller.getIdentifier(), clientMap);
+        EventMsg clientMsg = new EventMsg(EventType.ANNOUNCEMENT, controller.getIdentifier(), clientMap);
         Map<BigInteger, Pair<InetAddress, Integer>> clientList = controller.getClientList();
         for (Pair<InetAddress, Integer> pair : clientList.values()) {
             Utilities.send(controller.getSocket(), Utilities.serialize(clientMsg), pair.getKey(), pair.getValue());
