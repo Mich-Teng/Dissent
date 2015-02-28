@@ -12,7 +12,6 @@ import java.math.BigInteger;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * ***************************************************************
@@ -34,13 +33,15 @@ public class ClientRegisterPublisher implements Handler {
         BigInteger publicKey = (BigInteger) eventMsg.getField("public_key");
         Pair<InetAddress, Integer> clientAddr = controller.getClientAddr(publicKey);
         Utilities.send(socket, Utilities.serialize(clientMsg), clientAddr.getKey(), clientAddr.getValue());
+        // instead of sending new client to server, we will send it when finishing this round. Currently we just add it into buffer
 
+        /*
         eventMsg.add("addr", clientAddr);
         // sync data to all the servers
         EventMsg serverMsg = new EventMsg(EventType.ADD_NEWCLIENT, controller.getIdentifier(), eventMsg.getMap());
         List<Pair<InetAddress, Integer>> serverList = controller.getServerList();
         for (Pair<InetAddress, Integer> pair : serverList) {
             Utilities.send(socket, Utilities.serialize(serverMsg), pair.getKey(), pair.getValue());
-        }
+        }*/
     }
 }

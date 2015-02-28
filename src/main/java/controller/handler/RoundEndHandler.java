@@ -1,7 +1,6 @@
 package controller.handler;
 
 import controller.Controller;
-import controller.ControllerStatus;
 import javafx.util.Pair;
 import proto.EventMsg;
 import proto.EventType;
@@ -18,17 +17,14 @@ import java.util.Map;
 /**
  * ***************************************************************
  * Author: Chao Teng
- * Date: 2015-02-25 16:16.
- * Package: client.handler
+ * Date: 2015-02-27 19:53.
+ * Package: controller.handler
  * Description:
  * Welcome to contact chao.teng@yale.edu if you have any questions.
  * ****************************************************************
  */
 
-/**
- * finish announcement and send start message signal to the clients
- */
-public class AnnouncementHandler implements Handler {
+public class RoundEndHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
         // This event is triggered when server finishe announcement
@@ -46,18 +42,11 @@ public class AnnouncementHandler implements Handler {
         for (Pair<InetAddress, Integer> pair : serverList) {
             Utilities.send(controller.getSocket(), Utilities.serialize(serverMsg), pair.getKey(), pair.getValue());
         }
-
-        // distribute g and hash table of ids to user
-        Map<String, Object> clientMap = new HashMap<String, Object>();
-        //     clientMap.put("client_list",repMap.keySet());
-        clientMap.put("g", eventMsg.getField("g"));
-        clientMap.put("p", eventMsg.getField("p"));
-        EventMsg clientMsg = new EventMsg(EventType.MESSAGE, controller.getIdentifier(), clientMap);
+        // send user round-end message
+        EventMsg clientMsg = new EventMsg(EventType.ROUND_END, controller.getIdentifier(), new HashMap<String, Object>());
         Map<BigInteger, Pair<InetAddress, Integer>> clientList = controller.getClientList();
         for (Pair<InetAddress, Integer> pair : clientList.values()) {
             Utilities.send(controller.getSocket(), Utilities.serialize(clientMsg), pair.getKey(), pair.getValue());
         }
-        controller.setStatus(ControllerStatus.MESSAGE);
-        System.out.println("Start messaging phase...");
     }
 }

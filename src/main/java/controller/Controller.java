@@ -28,6 +28,7 @@ public class Controller extends BaseServer {
     List<BigInteger> msgSenderList = new ArrayList<BigInteger>();
     Map<BigInteger, BigInteger> voteCollect = new HashMap<BigInteger, BigInteger>();
     private int status = ControllerStatus.CONFIGURATION;
+    Map<BigInteger, BigInteger> newClientBuffer = new HashMap<BigInteger, BigInteger>();
 
 
     public Controller() throws SocketException, UnknownHostException {
@@ -125,18 +126,22 @@ public class Controller extends BaseServer {
 
     }
 
+    public void addNewClientIntoBuffer(BigInteger publicKey, BigInteger rep) {
+        newClientBuffer.put(publicKey, rep);
+    }
+
     public static void main(String[] args) {
         try {
             Controller controller = new Controller();
             ControllerListener controllerListener = new ControllerListener(controller);
             controllerListener.run();
             while (true) {
-                controller.setStatus(ControllerStatus.REGISTER);
-                controller.register();
                 controller.setStatus(ControllerStatus.ANNOUNCE);
+                System.out.println("Start announcement phase...");
                 controller.announce();
                 // 10 secs for msg
                 Thread.sleep(10000);
+                System.out.println("Start voting phase...");
                 controller.vote();
                 // 10 secs for vote
                 Thread.sleep(10000);
