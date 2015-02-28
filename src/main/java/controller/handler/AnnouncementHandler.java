@@ -58,6 +58,6 @@ public class AnnouncementHandler implements Handler {
             Utilities.send(controller.getSocket(), Utilities.serialize(clientMsg), pair.getKey(), pair.getValue());
         }
         controller.setStatus(ControllerStatus.MESSAGE);
-        System.out.println("Start messaging phase...");
+
     }
 }

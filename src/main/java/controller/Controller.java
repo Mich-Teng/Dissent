@@ -69,8 +69,10 @@ public class Controller extends BaseServer {
      */
     public void announce() {
         Pair<InetAddress, Integer> des = getFirstServer();
-        if (des == null)
+        if (des == null) {
+            status = ControllerStatus.MESSAGE;
             return;
+        }
         EventMsg eventMsg = new EventMsg(EventType.ANNOUNCEMENT, identifier, new HashMap<String, Object>());
         Utilities.send(socket, Utilities.serialize(eventMsg), des.getKey(), des.getValue());
     }
@@ -104,6 +106,10 @@ public class Controller extends BaseServer {
         // send signal to server
         eventMsg.add("offset", voteCollect);
         Pair<InetAddress, Integer> firstServer = getFirstServer();
+        if (firstServer == null) {
+            status = ControllerStatus.READY_FOR_NEW_ROUND;
+            return;
+        }
         Utilities.send(socket, Utilities.serialize(eventMsg), firstServer.getKey(), firstServer.getValue());
     }
 
@@ -148,10 +154,11 @@ public class Controller extends BaseServer {
                         break;
                     Thread.sleep(1000);
                 }
+                System.out.println("******************** New round begin ********************");
                 if (!(controller.getStatus() == ControllerStatus.READY_FOR_NEW_ROUND))
                     throw new Exception("Fail to be ready for the new round");
                 controller.setStatus(ControllerStatus.ANNOUNCE);
-                System.out.println("Start announcement phase...");
+                System.out.println("> Start announcement phase...");
                 controller.announce();
 
                 for (int i = 0; i < 100; i++) {
@@ -161,9 +168,10 @@ public class Controller extends BaseServer {
                 }
                 if (!(controller.getStatus() == ControllerStatus.MESSAGE))
                     throw new Exception("Fail to be ready for message phase");
+                System.out.println("> Start messaging phase...");
                 // 10 secs for msg
                 Thread.sleep(10000);
-                System.out.println("Start voting phase...");
+                System.out.println("> Start voting phase...");
                 controller.vote();
                 // 10 secs for vote
                 Thread.sleep(10000);
