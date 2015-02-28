@@ -1,6 +1,7 @@
 package controller.handler;
 
 import controller.Controller;
+import controller.ControllerStatus;
 import javafx.util.Pair;
 import proto.EventMsg;
 import proto.EventType;
@@ -32,9 +33,13 @@ public class RoundEndHandler implements Handler {
         // distribute final reputation map to servers
         List<Pair<BigInteger, BigInteger>> repList = (List<Pair<BigInteger, BigInteger>>) eventMsg.getField("rep_list");
         Map<BigInteger, BigInteger> repMap = new HashMap<BigInteger, BigInteger>();
+        // get the new registered client and add into reputation map
+        Map<BigInteger, BigInteger> newClientRepMap = controller.getNewClientBuffer();
+        repMap.putAll(newClientRepMap);
         for (Pair<BigInteger, BigInteger> pair : repList) {
             repMap.put(pair.getKey(), pair.getValue());
         }
+
         Map<String, Object> serverMap = new HashMap<String, Object>();
         serverMap.put("rep_map", repMap);
         EventMsg serverMsg = new EventMsg(EventType.SYNC_REPMAP, controller.getIdentifier(), serverMap);
@@ -48,5 +53,12 @@ public class RoundEndHandler implements Handler {
         for (Pair<InetAddress, Integer> pair : clientList.values()) {
             Utilities.send(controller.getSocket(), Utilities.serialize(clientMsg), pair.getKey(), pair.getValue());
         }
+        // sleep for 0.5 sec to wait server to sync data
+        try {
+            Thread.sleep(500);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        controller.setStatus(ControllerStatus.READY_FOR_NEW_ROUND);
     }
 }

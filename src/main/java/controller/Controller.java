@@ -119,15 +119,17 @@ public class Controller extends BaseServer {
         return g;
     }
 
-    /**
-     * register all the clients in the buffer
-     */
-    public void register() {
 
+    public Integer getStatus() {
+        return status;
     }
 
     public void addNewClientIntoBuffer(BigInteger publicKey, BigInteger rep) {
         newClientBuffer.put(publicKey, rep);
+    }
+
+    public Map<BigInteger, BigInteger> getNewClientBuffer() {
+        return newClientBuffer;
     }
 
     public static void main(String[] args) {
@@ -135,7 +137,15 @@ public class Controller extends BaseServer {
             Controller controller = new Controller();
             ControllerListener controllerListener = new ControllerListener(controller);
             controllerListener.run();
+            controller.setStatus(ControllerStatus.READY_FOR_NEW_ROUND);
             while (true) {
+                for (int i = 0; i < 100; i++) {
+                    if (controller.getStatus() == ControllerStatus.READY_FOR_NEW_ROUND)
+                        break;
+                    Thread.sleep(1000);
+                }
+                if (!(controller.getStatus() == ControllerStatus.READY_FOR_NEW_ROUND))
+                    throw new Exception("Fail to be ready for the new round");
                 controller.setStatus(ControllerStatus.ANNOUNCE);
                 System.out.println("Start announcement phase...");
                 controller.announce();
@@ -145,6 +155,7 @@ public class Controller extends BaseServer {
                 controller.vote();
                 // 10 secs for vote
                 Thread.sleep(10000);
+                controller.voteEnd();
             }
         } catch (Exception e) {
             e.printStackTrace();

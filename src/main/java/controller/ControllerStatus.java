@@ -12,7 +12,7 @@ package controller;
 
 public class ControllerStatus {
     public static final int UNKNOWN = 99;
-    public static final int REGISTER = 1;
+    public static final int READY_FOR_NEW_ROUND = 1;
     public static final int ANNOUNCE = 2;
     public static final int MESSAGE = 3;
     public static final int VOTE = 4;
