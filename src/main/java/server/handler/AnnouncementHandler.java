@@ -58,7 +58,7 @@ public class AnnouncementHandler implements Handler {
         // send data to the next server
         Map<String, Object> repMap = new HashMap<String, Object>();
         repMap.put("g", g);
-        repMap.put("rep_list", repMap);
+        repMap.put("rep_list", newList);
         repMap.put("p", dissentServer.getPrime());
         EventMsg repMsg = new EventMsg(EventType.ANNOUNCEMENT, dissentServer.getIdentifier(), repMap);
         Pair<InetAddress, Integer> nextHop = dissentServer.getNextHop();
