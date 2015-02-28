@@ -8,7 +8,6 @@ import util.CommutativeElGamal;
 import util.ElGamal;
 import util.Utilities;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.InetAddress;
@@ -68,7 +67,7 @@ public class DissentServer extends BaseServer {
     void loadControllerProperties() {
         Properties prop = new Properties();
         try {
-            prop.load(new FileInputStream("server.properties"));
+            prop.load(getClass().getResourceAsStream("/dissent_server.properties"));
             controllerPort = Integer.parseInt(prop.getProperty("CONTROLLER_PORT"));
             controllerIp = prop.getProperty("CONTROLLER_IP");
             nextHop = new Pair<InetAddress, Integer>(InetAddress.getByName(controllerIp), controllerPort);
@@ -133,6 +132,8 @@ public class DissentServer extends BaseServer {
     public static void main(String[] args) {
         try {
             DissentServer dissentServer = new DissentServer();
+            ServerListener serverListener = new ServerListener(dissentServer);
+            new Thread(serverListener).start();
             dissentServer.register();
             for (int i = 0; i < 10; i++) {
                 Thread.sleep(1000);
@@ -143,8 +144,10 @@ public class DissentServer extends BaseServer {
                 System.out.println("Fails to connect with controller. Please check the configuration");
                 System.exit(1);
             }
-            ServerListener serverListener = new ServerListener(dissentServer);
-            serverListener.run();
+            System.out.println("> Server register success...");
+            while (true) {
+                Thread.sleep(1000000);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

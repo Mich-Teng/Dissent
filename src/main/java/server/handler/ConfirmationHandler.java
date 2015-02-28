@@ -26,5 +26,6 @@ public class ConfirmationHandler implements Handler {
         if (confirmation) {
             dissentServer.setConnected(true);
         }
+
     }
 }

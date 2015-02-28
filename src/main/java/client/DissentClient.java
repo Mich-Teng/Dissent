@@ -139,6 +139,8 @@ public class DissentClient extends BaseServer {
         try {
             DissentClient client = new DissentClient();
             // register client to server cluster
+            ClientListener clientListener = new ClientListener(client);
+            new Thread(clientListener).start();
             client.setStatus(ClientStatus.CONFIGURATION);
             client.register();
             while (!(client.getStatus() == ClientStatus.MESSAGE))

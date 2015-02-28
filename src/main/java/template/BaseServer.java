@@ -37,7 +37,13 @@ public class BaseServer {
         loadProperties();
         localIp = Utilities.getLocalIPAddr();
         identifier = Utilities.getLocalHostname() + ":" + Utilities.getRandomNumber(100000000);
-        socket = new DatagramSocket(localPort);
+        for (int i = 0; i <= 5; i++) {
+            try {
+                socket = new DatagramSocket(localPort + i);
+                break;
+            } catch (Exception e) {
+            }
+        }
     }
 
     /**

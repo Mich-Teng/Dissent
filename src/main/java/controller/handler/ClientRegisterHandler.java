@@ -26,6 +26,7 @@ import java.util.Map;
 public class ClientRegisterHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer baseServer, InetAddress srcAddr, int srcPort) {
+        System.out.println("Client Register");
         Controller controller = (Controller) baseServer;
         // add client to current map. Currently, we store this data in controller. However, we could
         // randomly assign a server to deal with the client, which has a better load balance

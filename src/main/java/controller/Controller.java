@@ -29,6 +29,7 @@ public class Controller extends BaseServer {
     Map<BigInteger, BigInteger> voteCollect = new HashMap<BigInteger, BigInteger>();
     private int status = ControllerStatus.CONFIGURATION;
     Map<BigInteger, BigInteger> newClientBuffer = new HashMap<BigInteger, BigInteger>();
+    Map<InetAddress, Integer> newServerBuffer = new HashMap<InetAddress, Integer>();
 
 
     public Controller() throws SocketException, UnknownHostException {
@@ -39,8 +40,21 @@ public class Controller extends BaseServer {
         topology.add(addr, port);
     }
 
+    public void addServerIntoBuffer(InetAddress addr, Integer port) {
+        newServerBuffer.put(addr, port);
+    }
+
+    public void clear() {
+        voteCollect.clear();
+        newClientBuffer.clear();
+        newServerBuffer.clear();
+        msgSenderList.clear();
+    }
+
     public Pair<InetAddress, Integer> getLastServer() {
         List<Pair<InetAddress, Integer>> serverList = topology.getServerList();
+        if (serverList == null || serverList.size() == 0)
+            return null;
         return serverList.get(serverList.size() - 1);
     }
 
@@ -142,6 +156,13 @@ public class Controller extends BaseServer {
         return newClientBuffer;
     }
 
+
+    private void registerNewServer() {
+        for (Map.Entry<InetAddress, Integer> entry : newServerBuffer.entrySet()) {
+            addServer(entry.getKey(), entry.getValue());
+        }
+    }
+
     public static void main(String[] args) {
         try {
             Controller controller = new Controller();
@@ -154,6 +175,8 @@ public class Controller extends BaseServer {
                         break;
                     Thread.sleep(1000);
                 }
+                controller.registerNewServer();
+                controller.clear();
                 System.out.println("******************** New round begin ********************");
                 if (!(controller.getStatus() == ControllerStatus.READY_FOR_NEW_ROUND))
                     throw new Exception("Fail to be ready for the new round");

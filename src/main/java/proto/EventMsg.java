@@ -1,5 +1,7 @@
 package proto;
 
+import util.Utilities;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +23,10 @@ public class EventMsg implements Serializable {
 
     // deserialize a byte array into a event msg
     public EventMsg(byte[] arr) {
-        // todo
+        EventMsg eventMsg = (EventMsg) Utilities.deserialize(arr);
+        this.eventType = eventMsg.getEventType();
+        this.origin = eventMsg.getOrigin();
+        this.map = eventMsg.getMap();
     }
 
     public EventMsg(int eventType, String origin, Map<String, Object> map) {
@@ -50,5 +55,7 @@ public class EventMsg implements Serializable {
         map.remove(key);
     }
 
-
+    public String getOrigin() {
+        return origin;
+    }
 }
