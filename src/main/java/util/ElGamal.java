@@ -139,28 +139,33 @@ public class ElGamal {
         return s.mod(p);
     }
 
-    public BigInteger[] sign(BigInteger data) {
+    public BigInteger[] sign(BigInteger data, BigInteger g) {
         return sign(p, g, privateKey, data);
     }
 
     public BigInteger[] sign(BigInteger p, BigInteger g, BigInteger privateKey, BigInteger data) {
         BigInteger[] ret = new BigInteger[2];
-        BigInteger k = new BigInteger(p.bitLength() - 1, rng);
         BigInteger one = new BigInteger("1");
+        // generate a random prime which is less than p
+        BigInteger k = BigInteger.probablePrime(p.bitLength() - 1, rng);
+        while (p.subtract(one).mod(k).equals(new BigInteger("0")))
+            k = BigInteger.probablePrime(p.bitLength() - 1, rng);
+        
         // gcd(k,p-1) = 1
         while (!k.gcd(p.subtract(one)).equals(one)) {
             k = new BigInteger(p.bitLength() - 1, rng);
         }
+        BigInteger dividend = p.subtract(one);
         ret[0] = g.modPow(k, p);
         // s = k-1(m− xr) mod p−1
         ret[1] = data.subtract(privateKey.multiply(ret[0]));
-        ret[1] = ret[1].divide(k);
-        ret[1] = ret[1].mod(p);
+        ret[1] = ret[1].multiply(k.modInverse(dividend));
+        ret[1] = ret[1].mod(dividend);
         return ret;
     }
 
     public static boolean verify(BigInteger publicKey, BigInteger data, BigInteger r, BigInteger s, BigInteger g, BigInteger p) {
-        return g.modPow(data, p).equals(publicKey.modPow(r, p).multiply(r.modPow(s, p)));
+        return g.modPow(data, p).equals((publicKey.modPow(r, p).multiply(r.modPow(s, p))).mod(p));
     }
 
 

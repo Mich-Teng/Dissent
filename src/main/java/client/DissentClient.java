@@ -100,7 +100,7 @@ public class DissentClient extends BaseServer {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(text.getBytes("UTF-8"));
             BigInteger data = new BigInteger(1, hash);
-            BigInteger[] signature = elGamal.sign(data);
+            BigInteger[] signature = elGamal.sign(data, g);
             // send data to controller
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("signature", signature);

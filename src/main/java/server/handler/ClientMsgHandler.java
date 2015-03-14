@@ -28,6 +28,7 @@ public class ClientMsgHandler implements Handler {
         BigInteger nym = (BigInteger) eventMsg.getField("nym");
         BigInteger rep = dissentServer.getReputationMap().get(nym);
         eventMsg.add("rep", rep);
+        System.out.println("Receive msg from " + srcAddr + ":" + port);
         // Currently just send the msg to all the clients with nym and reputation
         Collection<Pair<InetAddress, Integer>> clients = dissentServer.getClientList().values();
         for (Pair<InetAddress, Integer> pair : clients) {

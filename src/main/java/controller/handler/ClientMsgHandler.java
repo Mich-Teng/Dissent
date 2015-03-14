@@ -34,6 +34,9 @@ public class ClientMsgHandler implements Handler {
         BigInteger[] signature = (BigInteger[]) eventMsg.getField("signature");
         BigInteger nym = (BigInteger) eventMsg.getField("nym");
         eventMsg.remove("signature");
+
+        System.out.println("Receive msg from " + srcAddr + ":" + port + ": " + text);
+        
         try {
             // hash the message
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
