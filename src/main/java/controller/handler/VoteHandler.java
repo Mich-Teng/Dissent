@@ -40,7 +40,7 @@ public class VoteHandler implements Handler {
             if (ElGamal.verify(nym, data, signature[0], signature[1], g, controller.getPrime())) {
                 // the client pass the verification, collect vote
                 // args[0] is msgid, args[1] is vote
-                String[] args = text.split(",");
+                String[] args = text.split(";");
                 BigInteger targetNym = controller.getMsgNym(Integer.parseInt(args[0]));
                 controller.addVote(targetNym, new BigInteger(args[1]));
             }

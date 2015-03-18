@@ -45,14 +45,17 @@ public class AnnouncementHandler implements Handler {
             list = (List<Pair<BigInteger, BigInteger>>) eventMsg.getField("rep_list");
         }
         // encrypt
+        Map<BigInteger, BigInteger> keyMap = new HashMap<BigInteger, BigInteger>();
         g = dissentServer.rsaEncrypt(g, p);
         List<Pair<BigInteger, BigInteger>> newList = new ArrayList<Pair<BigInteger, BigInteger>>();
         for (Pair<BigInteger, BigInteger> pair : list) {
             // encrypt the public key and decrypt the reputation
             BigInteger newKey = dissentServer.rsaEncrypt(pair.getKey(), p);
             BigInteger decryptRep = dissentServer.decrypt(pair.getValue());
+            keyMap.put(newKey, pair.getKey());
             newList.add(new Pair<BigInteger, BigInteger>(newKey, decryptRep));
         }
+        dissentServer.setKeyMap(keyMap);
         // shuffle the list
         Collections.shuffle(newList);
         // send data to the next server

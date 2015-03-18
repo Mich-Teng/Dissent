@@ -52,11 +52,12 @@ public class RoundEndHandler implements Handler {
             g = (BigInteger) eventMsg.getField("g");
             list = (List<Pair<BigInteger, BigInteger>>) eventMsg.getField("rep_list");
         }
+        Map<BigInteger, BigInteger> keyMap = dissentServer.getKeyMap();
         g = dissentServer.rsaDecrypt(g, p);
         List<Pair<BigInteger, BigInteger>> newList = new ArrayList<Pair<BigInteger, BigInteger>>();
         for (Pair<BigInteger, BigInteger> pair : list) {
             // decrypt the public key and encrypt the reputation back
-            BigInteger newKey = dissentServer.rsaDecrypt(pair.getKey(), p);
+            BigInteger newKey = keyMap.get(pair.getKey());
             BigInteger encryptRep = dissentServer.encrypt(pair.getValue());
             newList.add(new Pair<BigInteger, BigInteger>(newKey, encryptRep));
         }

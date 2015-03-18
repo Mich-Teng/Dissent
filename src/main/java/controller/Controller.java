@@ -143,6 +143,10 @@ public class Controller extends BaseServer {
         return g;
     }
 
+    public void setGenerator(BigInteger g) {
+        this.g = g;
+
+    }
 
     public Integer getStatus() {
         return status;

@@ -1,6 +1,8 @@
 package util;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -83,5 +85,24 @@ public class Utilities {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static BigDecimal rootN_Decimal(BigInteger num, BigInteger n, int precision) {
+        //num是被开方数，n是开方次数,precision设置保留几位小数
+        BigDecimal x = new BigDecimal(num.divide(n));
+        BigDecimal x0 = BigDecimal.ZERO;
+
+        BigDecimal e = new BigDecimal("0.1");
+        for (int i = 1; i < precision; ++i)
+            e = e.divide(BigDecimal.TEN, i + 1, BigDecimal.ROUND_HALF_EVEN);
+
+        BigDecimal K = new BigDecimal(num);
+        BigDecimal m = new BigDecimal(n);
+
+        while (x.subtract(x0).abs().compareTo(e) > 0) {
+            x0 = x;
+            x = x.add(K.subtract(x.pow(n)).divide(m.multiply(x.pow(n - 1)), precision, BigDecimal.ROUND_HALF_EVEN));
+        }
+        return x;
     }
 }

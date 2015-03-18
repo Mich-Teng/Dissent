@@ -42,6 +42,8 @@ public class DissentServer extends BaseServer {
     private BigInteger r = null;
     // generator
     private BigInteger g = null;
+    // map current public key with previous key
+    private Map<BigInteger, BigInteger> keyMap = null;
 
 
     public DissentServer() throws SocketException, UnknownHostException {
@@ -74,6 +76,14 @@ public class DissentServer extends BaseServer {
         } catch (IOException e) {
             System.out.print("Unable to load controller.properties. We will use default configuration");
         }
+    }
+
+    public Map<BigInteger, BigInteger> getKeyMap() {
+        return keyMap;
+    }
+
+    public void setKeyMap(Map<BigInteger, BigInteger> keyMap) {
+        this.keyMap = keyMap;
     }
 
     public BigInteger encrypt(BigInteger data) {

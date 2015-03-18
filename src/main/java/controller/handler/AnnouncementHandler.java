@@ -46,7 +46,7 @@ public class AnnouncementHandler implements Handler {
         for (Pair<InetAddress, Integer> pair : serverList) {
             Utilities.send(controller.getSocket(), Utilities.serialize(serverMsg), pair.getKey(), pair.getValue());
         }
-
+        BigInteger g = (BigInteger) eventMsg.getField("g");
         // distribute g and hash table of ids to user
         Map<String, Object> clientMap = new HashMap<String, Object>();
         //     clientMap.put("client_list",repMap.keySet());
@@ -57,6 +57,8 @@ public class AnnouncementHandler implements Handler {
         for (Pair<InetAddress, Integer> pair : clientList.values()) {
             Utilities.send(controller.getSocket(), Utilities.serialize(clientMsg), pair.getKey(), pair.getValue());
         }
+        // set controller's new g
+        controller.setGenerator(g);
         controller.setStatus(ControllerStatus.MESSAGE);
 
     }

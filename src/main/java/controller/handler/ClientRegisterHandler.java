@@ -38,6 +38,7 @@ public class ClientRegisterHandler implements Handler {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("public_key", publicKey);
         map.put("reputation", new BigInteger("0"));
+        map.put("addr", new Pair<InetAddress, Integer>(srcAddr, srcPort));
         EventMsg msg = new EventMsg(EventType.CLIENT_REGISTER_SERVERSIDE, controller.getIdentifier(), map);
         Utilities.send(controller.getSocket(), Utilities.serialize(msg), firstServer.getKey(), firstServer.getValue());
     }
