@@ -5,7 +5,6 @@ import javafx.util.Pair;
 import proto.EventMsg;
 import proto.EventType;
 import template.BaseServer;
-import template.Config;
 import template.Handler;
 import util.Utilities;
 
@@ -37,7 +36,6 @@ public class ClientRegisterHandler implements Handler {
         Pair<InetAddress, Integer> firstServer = controller.getFirstServer();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("public_key", publicKey);
-        map.put("reputation", Config.OFFSET);
         map.put("addr", new Pair<InetAddress, Integer>(srcAddr, srcPort));
         EventMsg msg = new EventMsg(EventType.CLIENT_REGISTER_SERVERSIDE, controller.getIdentifier(), map);
         Utilities.send(controller.getSocket(), Utilities.serialize(msg), firstServer.getKey(), firstServer.getValue());

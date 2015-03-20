@@ -33,9 +33,7 @@ public class RoundEndHandler implements Handler {
         // distribute final reputation map to servers
         List<Pair<BigInteger, BigInteger>> repList = (List<Pair<BigInteger, BigInteger>>) eventMsg.getField("rep_list");
         Map<BigInteger, BigInteger> repMap = new HashMap<BigInteger, BigInteger>();
-        // get the new registered client and add into reputation map
-        Map<BigInteger, BigInteger> newClientRepMap = controller.getNewClientBuffer();
-        repMap.putAll(newClientRepMap);
+
         for (Pair<BigInteger, BigInteger> pair : repList) {
             repMap.put(pair.getKey(), pair.getValue());
         }

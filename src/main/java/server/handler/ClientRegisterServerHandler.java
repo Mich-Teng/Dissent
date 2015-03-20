@@ -32,18 +32,16 @@ public class ClientRegisterServerHandler implements Handler {
 
         // get the public key and entrypted reputation
         BigInteger publicKey = (BigInteger) eventMsg.getField("public_key");
-        BigInteger reputation = (BigInteger) eventMsg.getField("reputation");
         Pair<InetAddress, Integer> addr = (Pair<InetAddress, Integer>) eventMsg.getField("addr");
         // add address into the server
         dissentServer.addClient(publicKey, addr);
         // commutative encrypt it and send it to next server
         Map<String, Object> map = new HashMap<String, Object>();
-        BigInteger[] ret = dissentServer.encrypt(reputation);
-        dissentServer.setA(ret[0]);
-        map.put("public_key", publicKey);
-        map.put("reputation", ret[1]);
+        BigInteger newKey = dissentServer.rsaEncrypt(publicKey, dissentServer.getPrime());
+        map.put("public_key", newKey);
         map.put("addr", addr);
         EventMsg msg = new EventMsg(EventType.CLIENT_REGISTER_SERVERSIDE, dissentServer.getIdentifier(), map);
         Utilities.send(dissentServer.getSocket(), Utilities.serialize(msg), nextHop.getKey(), nextHop.getValue());
+        dissentServer.addKeyMapEntry(newKey, publicKey);
     }
 }

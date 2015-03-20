@@ -116,6 +116,15 @@ public class ElGamal {
         return c;
     }
 
+    public BigInteger[] encrypt(BigInteger data, BigInteger a, BigInteger y) {
+        BigInteger[] c = new BigInteger[2];
+        c[0] = a;
+        c[1] = publicKey.modPow(y, p);
+        c[1] = c[1].multiply(data);
+        c[1] = c[1].mod(p);
+        return c;
+    }
+
     /**
      * Encrypts data using this object's public key.
      *

@@ -43,7 +43,7 @@ public class DissentServer extends BaseServer {
     // generator
     private BigInteger g = null;
     // map current public key with previous key
-    private Map<BigInteger, BigInteger> keyMap = null;
+    private Map<BigInteger, BigInteger> keyMap = new HashMap<BigInteger, BigInteger>();
 
     private BigInteger a = null;
 
@@ -85,12 +85,14 @@ public class DissentServer extends BaseServer {
         return keyMap;
     }
 
-    public void setKeyMap(Map<BigInteger, BigInteger> keyMap) {
-        this.keyMap = keyMap;
+    public void addKeyMap(Map<BigInteger, BigInteger> keyMap) {
+        if (keyMap == null || keyMap.isEmpty())
+            return;
+        this.keyMap.putAll(keyMap);
     }
 
-    public BigInteger[] encrypt(BigInteger data) {
-        return commutativeElGamal.encrypt(data);
+    public BigInteger[] encrypt(BigInteger data, BigInteger a, BigInteger y) {
+        return commutativeElGamal.encrypt(data, a, y);
     }
 
     public BigInteger decrypt(BigInteger a, BigInteger data) {
@@ -150,6 +152,13 @@ public class DissentServer extends BaseServer {
     public Pair<InetAddress, Integer> getPrevHop() {
         return prevHop;
     }
+
+    public void addKeyMapEntry(BigInteger key, BigInteger val) {
+        keyMap.put(key, val);
+
+    }
+    
+    
 
     public void setPrevHop(Pair<InetAddress, Integer> prevHop) {
         this.prevHop = prevHop;

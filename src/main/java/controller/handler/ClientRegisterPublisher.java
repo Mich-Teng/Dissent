@@ -31,11 +31,10 @@ public class ClientRegisterPublisher implements Handler {
         // reply to the client with successful info
         EventMsg clientMsg = new EventMsg(EventType.CLIENT_REGISTER_CONFIRMATION, controller.getIdentifier(), new HashMap<String, Object>());
         BigInteger publicKey = (BigInteger) eventMsg.getField("public_key");
-        BigInteger rep = (BigInteger) eventMsg.getField("reputation");
-        Pair<InetAddress, Integer> clientAddr = controller.getClientAddr(publicKey);
-        Utilities.send(socket, Utilities.serialize(clientMsg), clientAddr.getKey(), clientAddr.getValue());
+        Pair<InetAddress, Integer> addr = (Pair<InetAddress, Integer>) eventMsg.getField("addr");
+        Utilities.send(socket, Utilities.serialize(clientMsg), addr.getKey(), addr.getValue());
         // instead of sending new client to server, we will send it when finishing this round. Currently we just add it into buffer
-        ((Controller) server).addNewClientIntoBuffer(publicKey, rep);
+        controller.addNewClientIntoBuffer(publicKey);
         /*
         eventMsg.add("addr", clientAddr);
         // sync data to all the servers

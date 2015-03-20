@@ -28,7 +28,7 @@ public class Controller extends BaseServer {
     List<BigInteger> msgSenderList = new ArrayList<BigInteger>();
     Map<BigInteger, BigInteger> voteCollect = new HashMap<BigInteger, BigInteger>();
     private int status = ControllerStatus.CONFIGURATION;
-    Map<BigInteger, BigInteger> newClientBuffer = new HashMap<BigInteger, BigInteger>();
+    List<BigInteger> newClientBuffer = new ArrayList<BigInteger>();
 
 
     public Controller() throws SocketException, UnknownHostException {
@@ -114,6 +114,7 @@ public class Controller extends BaseServer {
 
         // send signal to server
         eventMsg.add("offset", voteCollect);
+        eventMsg.add("new_client", newClientBuffer);
         Pair<InetAddress, Integer> lastServer = getLastServer();
         if (lastServer == null) {
             status = ControllerStatus.READY_FOR_NEW_ROUND;
@@ -147,11 +148,11 @@ public class Controller extends BaseServer {
         return status;
     }
 
-    public void addNewClientIntoBuffer(BigInteger publicKey, BigInteger rep) {
-        newClientBuffer.put(publicKey, rep);
+    public void addNewClientIntoBuffer(BigInteger publicKey) {
+        newClientBuffer.add(publicKey);
     }
 
-    public Map<BigInteger, BigInteger> getNewClientBuffer() {
+    public List<BigInteger> getNewClientBuffer() {
         return newClientBuffer;
     }
 

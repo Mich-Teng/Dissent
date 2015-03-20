@@ -52,7 +52,7 @@ public class AnnouncementHandler implements Handler {
             keyMap.put(newKey, pair.getKey());
             newList.add(new Pair<BigInteger, BigInteger>(newKey, decryptRep));
         }
-        dissentServer.setKeyMap(keyMap);
+        dissentServer.addKeyMap(keyMap);
         // shuffle the list
         Collections.shuffle(newList);
         // send data to the next server
