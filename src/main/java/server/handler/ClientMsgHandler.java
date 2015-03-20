@@ -4,6 +4,7 @@ import javafx.util.Pair;
 import proto.EventMsg;
 import server.DissentServer;
 import template.BaseServer;
+import template.Config;
 import template.Handler;
 import util.Utilities;
 
@@ -27,8 +28,8 @@ public class ClientMsgHandler implements Handler {
         DissentServer dissentServer = (DissentServer) server;
         BigInteger nym = (BigInteger) eventMsg.getField("nym");
         BigInteger rep = dissentServer.getReputationMap().get(nym);
-        eventMsg.add("rep", rep);
-        System.out.println("Receive msg from " + srcAddr + ":" + port);
+        eventMsg.add("rep", rep.subtract(Config.OFFSET));
+        System.out.println("[server] Receiving msg from " + srcAddr + ":" + port);
         // Currently just send the msg to all the clients with nym and reputation
         Collection<Pair<InetAddress, Integer>> clients = dissentServer.getClientList().values();
         for (Pair<InetAddress, Integer> pair : clients) {

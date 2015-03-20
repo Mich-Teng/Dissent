@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -28,7 +30,7 @@ public class TestEncryption {
     @Before
     public void init() {
         for (int i = 0; i < SERVER_NUM; i++)
-            ces[i] = new CommutativeElGamal();
+            ces[i] = new CommutativeElGamal(1);
     }
 
     @Test
@@ -86,13 +88,25 @@ public class TestEncryption {
 
     @Test
     public void commutativeEncrypt() {
-        BigInteger num = new BigInteger("0");
-        // encrypt
-        for (int i = 0; i < SERVER_NUM; i++)
-            num = ces[i].encrypt(num)[2];
-        // decrypt
-        for (int i = SERVER_NUM - 1; i >= 0; i--)
-            num = ces[i].decrypt(num);
-        assertEquals(new BigInteger("0"), num);
+        ElGamal elGamal1 = new ElGamal();
+        BigInteger data = new BigInteger("1");
+        List<BigInteger> l = new ArrayList<BigInteger>();
+
+        for (int i = 0; i < SERVER_NUM; i++) {
+            BigInteger[] e = elGamal1.encrypt(data);
+            l.add(e[0]);
+            data = e[1];
+        }
+        for (int i = 0; i < SERVER_NUM; i++) {
+            BigInteger e = l.get(l.size() - 1 - i);
+            BigInteger[] arr = {e, data};
+            data = elGamal1.decrypt(arr);
+        }
+        assertEquals(data, new BigInteger("1"));
+        //  BigInteger encrypt = rsa.encrypt(data);
+        //  BigInteger decrypt = rsa.decrypt(encrypt);
+        //  assertEquals(decrypt,data);
     }
+
+
 }

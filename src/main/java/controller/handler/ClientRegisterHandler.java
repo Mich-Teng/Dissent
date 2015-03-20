@@ -5,6 +5,7 @@ import javafx.util.Pair;
 import proto.EventMsg;
 import proto.EventType;
 import template.BaseServer;
+import template.Config;
 import template.Handler;
 import util.Utilities;
 
@@ -26,7 +27,6 @@ import java.util.Map;
 public class ClientRegisterHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer baseServer, InetAddress srcAddr, int srcPort) {
-        System.out.println("Client register request from " + srcAddr + ":" + srcPort);
         Controller controller = (Controller) baseServer;
         // add client to current map. Currently, we store this data in controller. However, we could
         // randomly assign a server to deal with the client, which has a better load balance
@@ -37,7 +37,7 @@ public class ClientRegisterHandler implements Handler {
         Pair<InetAddress, Integer> firstServer = controller.getFirstServer();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("public_key", publicKey);
-        map.put("reputation", new BigInteger("0"));
+        map.put("reputation", Config.OFFSET);
         map.put("addr", new Pair<InetAddress, Integer>(srcAddr, srcPort));
         EventMsg msg = new EventMsg(EventType.CLIENT_REGISTER_SERVERSIDE, controller.getIdentifier(), map);
         Utilities.send(controller.getSocket(), Utilities.serialize(msg), firstServer.getKey(), firstServer.getValue());

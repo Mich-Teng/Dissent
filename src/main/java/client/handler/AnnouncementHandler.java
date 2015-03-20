@@ -31,8 +31,9 @@ public class AnnouncementHandler implements Handler {
         dissentClient.setOneTimePseudonym(oneTimePseudonym);
         dissentClient.setG(g);
         // print out the msg to suggest user to send msg or vote
-        System.out.println("Your One-Time Pseudonym this round is " + oneTimePseudonym);
-        System.out.println("You can send message now!");
+        System.out.println("[client] One-Time pseudonym for this round is ");
+        System.out.println(oneTimePseudonym);
+        System.out.println("*** [client] Message Phase begins. Sending msg using the format... ***");
         System.out.println("msg <msg_text>");
         dissentClient.setStatus(ClientStatus.MESSAGE);
     }

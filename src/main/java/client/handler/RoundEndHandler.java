@@ -23,7 +23,7 @@ public class RoundEndHandler implements Handler {
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
         DissentClient dissentClient = (DissentClient) server;
         dissentClient.setStatus(ClientStatus.CONNECTED);
-        System.out.println("This round is ended.");
+        System.out.println("[client] Round ended. Waiting for new round start...");
         System.out.println("Please wait for the next round to start");
     }
 }

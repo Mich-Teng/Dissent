@@ -29,7 +29,6 @@ public class Controller extends BaseServer {
     Map<BigInteger, BigInteger> voteCollect = new HashMap<BigInteger, BigInteger>();
     private int status = ControllerStatus.CONFIGURATION;
     Map<BigInteger, BigInteger> newClientBuffer = new HashMap<BigInteger, BigInteger>();
-    Map<InetAddress, Integer> newServerBuffer = new HashMap<InetAddress, Integer>();
 
 
     public Controller() throws SocketException, UnknownHostException {
@@ -40,14 +39,10 @@ public class Controller extends BaseServer {
         topology.add(addr, port);
     }
 
-    public void addServerIntoBuffer(InetAddress addr, Integer port) {
-        newServerBuffer.put(addr, port);
-    }
 
     public void clear() {
         voteCollect.clear();
         newClientBuffer.clear();
-        newServerBuffer.clear();
         msgSenderList.clear();
     }
 
@@ -119,12 +114,12 @@ public class Controller extends BaseServer {
 
         // send signal to server
         eventMsg.add("offset", voteCollect);
-        Pair<InetAddress, Integer> firstServer = getFirstServer();
-        if (firstServer == null) {
+        Pair<InetAddress, Integer> lastServer = getLastServer();
+        if (lastServer == null) {
             status = ControllerStatus.READY_FOR_NEW_ROUND;
             return;
         }
-        Utilities.send(socket, Utilities.serialize(eventMsg), firstServer.getKey(), firstServer.getValue());
+        Utilities.send(socket, Utilities.serialize(eventMsg), lastServer.getKey(), lastServer.getValue());
     }
 
     public void addVote(BigInteger oneTimePseunym, BigInteger vote) {
@@ -161,17 +156,23 @@ public class Controller extends BaseServer {
     }
 
 
-    private void registerNewServer() {
-        for (Map.Entry<InetAddress, Integer> entry : newServerBuffer.entrySet()) {
-            addServer(entry.getKey(), entry.getValue());
-        }
-    }
 
     public static void main(String[] args) {
         try {
             Controller controller = new Controller();
             ControllerListener controllerListener = new ControllerListener(controller);
             new Thread(controllerListener).start();
+            System.out.println("[controller] Listener launched...");
+            controller.setStatus(ControllerStatus.SERVER_CONFIGURATION);
+            System.out.println("** Note: Type ok to finish the server configuration. **");
+            Scanner scanner = new Scanner(System.in);
+            while (true)
+                if (scanner.nextLine().equals("ok"))
+                    break;
+            System.out.println("[controller] Servers in the current network:");
+            List<Pair<InetAddress, Integer>> serverList = controller.getServerList();
+            for (Pair<InetAddress, Integer> pair : serverList)
+                System.out.println(pair.getKey() + ":" + pair.getValue());
             controller.setStatus(ControllerStatus.READY_FOR_NEW_ROUND);
             while (true) {
                 for (int i = 0; i < 100; i++) {
@@ -179,13 +180,12 @@ public class Controller extends BaseServer {
                         break;
                     Thread.sleep(1000);
                 }
-                controller.registerNewServer();
                 controller.clear();
                 System.out.println("******************** New round begin ********************");
                 if (!(controller.getStatus() == ControllerStatus.READY_FOR_NEW_ROUND))
                     throw new Exception("Fail to be ready for the new round");
                 controller.setStatus(ControllerStatus.ANNOUNCE);
-                System.out.println("> Start announcement phase...");
+                System.out.println("[controller] Announcement phase started...");
                 controller.announce();
 
                 for (int i = 0; i < 100; i++) {
@@ -195,10 +195,10 @@ public class Controller extends BaseServer {
                 }
                 if (!(controller.getStatus() == ControllerStatus.MESSAGE))
                     throw new Exception("Fail to be ready for message phase");
-                System.out.println("> Start messaging phase...");
+                System.out.println("[controller] Messaging phase started...");
                 // 10 secs for msg
                 Thread.sleep(10000);
-                System.out.println("> Start voting phase...");
+                System.out.println("[controller] Voting phase started...");
                 controller.vote();
                 // 10 secs for vote
                 Thread.sleep(10000);

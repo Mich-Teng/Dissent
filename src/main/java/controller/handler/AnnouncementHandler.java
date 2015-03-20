@@ -39,6 +39,7 @@ public class AnnouncementHandler implements Handler {
         for (Pair<BigInteger, BigInteger> pair : repList) {
             repMap.put(pair.getKey(), pair.getValue());
         }
+
         Map<String, Object> serverMap = new HashMap<String, Object>();
         serverMap.put("rep_map", repMap);
         EventMsg serverMsg = new EventMsg(EventType.SYNC_REPMAP, controller.getIdentifier(), serverMap);
@@ -51,7 +52,7 @@ public class AnnouncementHandler implements Handler {
         Map<String, Object> clientMap = new HashMap<String, Object>();
         //     clientMap.put("client_list",repMap.keySet());
         clientMap.put("g", eventMsg.getField("g"));
-        clientMap.put("p", eventMsg.getField("p"));
+        clientMap.put("p", controller.getPrime());
         EventMsg clientMsg = new EventMsg(EventType.ANNOUNCEMENT, controller.getIdentifier(), clientMap);
         Map<BigInteger, Pair<InetAddress, Integer>> clientList = controller.getClientList();
         for (Pair<InetAddress, Integer> pair : clientList.values()) {

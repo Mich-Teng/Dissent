@@ -25,10 +25,6 @@ public class SyncRepHandler implements Handler {
         DissentServer dissentServer = (DissentServer) server;
         Map<BigInteger, BigInteger> repMap = (Map<BigInteger, BigInteger>) eventMsg.getField("rep_map");
         // reset the reputation map for this server
-        System.out.println("Current Reputation Map");
         dissentServer.setReputationMap(repMap);
-        for (Map.Entry<BigInteger, BigInteger> pair : repMap.entrySet()) {
-            System.out.println("key: " + pair.getKey() + "   rep: " + pair.getValue());
-        }
     }
 }

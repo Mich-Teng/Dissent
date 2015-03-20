@@ -1,5 +1,6 @@
 package server.handler;
 
+import javafx.util.Pair;
 import proto.EventMsg;
 import server.DissentServer;
 import template.BaseServer;
@@ -23,6 +24,10 @@ public class ConfirmationHandler implements Handler {
         DissentServer dissentServer = (DissentServer) server;
         // get the reply from the package
         Boolean confirmation = (Boolean) eventMsg.getField("reply");
+        Pair<InetAddress, Integer> prevServer = (Pair<InetAddress, Integer>) eventMsg.getField("prev_server");
+        if (prevServer != null) {
+            dissentServer.setPrevHop(prevServer);
+        }
         if (confirmation) {
             dissentServer.setConnected(true);
         }

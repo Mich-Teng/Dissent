@@ -16,5 +16,6 @@ public class ControllerStatus {
     public static final int ANNOUNCE = 2;
     public static final int MESSAGE = 3;
     public static final int VOTE = 4;
+    public static final int SERVER_CONFIGURATION = 5;
     public static final int CONFIGURATION = 0;
 }

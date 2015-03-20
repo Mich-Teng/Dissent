@@ -38,8 +38,11 @@ public class ClientRegisterServerHandler implements Handler {
         dissentServer.addClient(publicKey, addr);
         // commutative encrypt it and send it to next server
         Map<String, Object> map = new HashMap<String, Object>();
+        BigInteger[] ret = dissentServer.encrypt(reputation);
+        dissentServer.setA(ret[0]);
         map.put("public_key", publicKey);
-        map.put("reputation", dissentServer.encrypt(reputation));
+        map.put("reputation", ret[1]);
+        map.put("addr", addr);
         EventMsg msg = new EventMsg(EventType.CLIENT_REGISTER_SERVERSIDE, dissentServer.getIdentifier(), map);
         Utilities.send(dissentServer.getSocket(), Utilities.serialize(msg), nextHop.getKey(), nextHop.getValue());
     }

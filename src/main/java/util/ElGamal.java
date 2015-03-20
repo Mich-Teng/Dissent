@@ -123,7 +123,7 @@ public class ElGamal {
      * @return Encrypted data (two bigIntegers)
      */
     public BigInteger[] encrypt(BigInteger data) {
-        return encrypt(data, publicKey);
+        return encrypt(publicKey, data);
     }
 
     /**
@@ -150,7 +150,7 @@ public class ElGamal {
         BigInteger k = BigInteger.probablePrime(p.bitLength() - 1, rng);
         while (p.subtract(one).mod(k).equals(new BigInteger("0")))
             k = BigInteger.probablePrime(p.bitLength() - 1, rng);
-        
+
         // gcd(k,p-1) = 1
         while (!k.gcd(p.subtract(one)).equals(one)) {
             k = new BigInteger(p.bitLength() - 1, rng);

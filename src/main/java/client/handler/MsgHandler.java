@@ -25,7 +25,7 @@ public class MsgHandler implements Handler {
         String text = (String) eventMsg.getField("text");
         Integer msgId = (Integer) eventMsg.getField("msgID");
 
-        System.out.println("Message from " + nym.toString() + "(reputation: +" + rep + ")");
+        System.out.println("Message from " + nym.toString() + "(reputation: " + rep + ")");
         System.out.println("Message ID: " + msgId);
         System.out.println(text);
         System.out.println();

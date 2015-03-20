@@ -21,9 +21,11 @@ import java.net.InetAddress;
 public class VoteStartHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
-        System.out.println("You can vote now!");
-        System.out.println("vote <msgid> (+-)1");
         DissentClient dissentClient = (DissentClient) server;
+        if (dissentClient.getStatus() != ClientStatus.MESSAGE)
+            return;
+        System.out.println("*** [client] Vote Phase begins. Vote using the format... ***");
+        System.out.println("vote <msg_id> (+-)1");
         dissentClient.setStatus(ClientStatus.VOTE);
     }
 }

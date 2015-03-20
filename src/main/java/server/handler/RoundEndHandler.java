@@ -27,13 +27,9 @@ public class RoundEndHandler implements Handler {
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
         DissentServer dissentServer = (DissentServer) server;
         List<Pair<BigInteger, BigInteger>> list = null;
-        BigInteger g = null;
-        BigInteger p = null;
         // get or create data from the previous server
-        if (eventMsg.getField("g") == null) {
+        if (eventMsg.getField("offset") != null) {
             // the first server in the server sequence
-            g = dissentServer.getGenerator();
-            p = dissentServer.getPrime();
             Map<BigInteger, BigInteger> repMap = dissentServer.getReputationMap();
             // update the reputation map based on the offset
             Map<BigInteger, BigInteger> voteOffset = (Map<BigInteger, BigInteger>) eventMsg.getField("offset");
@@ -48,28 +44,24 @@ public class RoundEndHandler implements Handler {
                 }
             }
         } else {
-            p = (BigInteger) eventMsg.getField("p");
-            g = (BigInteger) eventMsg.getField("g");
             list = (List<Pair<BigInteger, BigInteger>>) eventMsg.getField("rep_list");
         }
         Map<BigInteger, BigInteger> keyMap = dissentServer.getKeyMap();
-        g = dissentServer.rsaDecrypt(g, p);
         List<Pair<BigInteger, BigInteger>> newList = new ArrayList<Pair<BigInteger, BigInteger>>();
         for (Pair<BigInteger, BigInteger> pair : list) {
             // decrypt the public key and encrypt the reputation back
             BigInteger newKey = keyMap.get(pair.getKey());
-            BigInteger encryptRep = dissentServer.encrypt(pair.getValue());
-            newList.add(new Pair<BigInteger, BigInteger>(newKey, encryptRep));
+            BigInteger[] encryptRep = dissentServer.encrypt(pair.getValue());
+            dissentServer.setA(encryptRep[0]);
+            newList.add(new Pair<BigInteger, BigInteger>(newKey, encryptRep[1]));
         }
         // shuffle the list
         Collections.shuffle(newList);
         // send data to the next server
         Map<String, Object> repMap = new HashMap<String, Object>();
-        repMap.put("g", g);
         repMap.put("rep_list", newList);
-        repMap.put("p", dissentServer.getPrime());
         EventMsg repMsg = new EventMsg(EventType.ROUND_END, dissentServer.getIdentifier(), repMap);
-        Pair<InetAddress, Integer> nextHop = dissentServer.getNextHop();
-        Utilities.send(dissentServer.getSocket(), Utilities.serialize(repMsg), nextHop.getKey(), nextHop.getValue());
+        Pair<InetAddress, Integer> prevHop = dissentServer.getPrevHop();
+        Utilities.send(dissentServer.getSocket(), Utilities.serialize(repMsg), prevHop.getKey(), prevHop.getValue());
     }
 }

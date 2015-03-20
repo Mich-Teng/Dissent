@@ -24,8 +24,6 @@ public class RegisterConfirmationHandler implements Handler {
         DissentClient dissentClient = (DissentClient) server;
         dissentClient.setStatus(ClientStatus.CONNECTED);
         // simply print out register success info here
-        System.out.println("Congratulations! Register successfully!");
-        System.out.println("Please wait for the new round to start.");
-
+        System.out.println("[client] Register success. Waiting for new round begin...");
     }
 }
