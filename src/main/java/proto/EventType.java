@@ -11,7 +11,7 @@ package proto;
  */
 
 public class EventType {
-    public static final int EVENT_NUM = 13;
+    public static final int EVENT_NUM = 14;
     // client -> server: request g
     public static final int SERVER_REGISTER = 1;
     public static final int SERVER_REGISTER_REPLY = 2;
@@ -25,4 +25,5 @@ public class EventType {
     public static final int MESSAGE = 10;
     public static final int VOTE = 11;
     public static final int ROUND_END = 12;
+    public static final int VOTE_STATUS = 13;
 }

@@ -10,9 +10,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * ***************************************************************
@@ -60,6 +58,13 @@ public class BaseServer {
     }
 
     public void addClient(BigInteger publicKey, Pair<InetAddress, Integer> client) {
+        // remove all the client with same ip and port
+        for(Iterator<Map.Entry<BigInteger,Pair<InetAddress,Integer>>> it = clientAddr.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<BigInteger,Pair<InetAddress,Integer>> entry = it.next();
+            if(entry.getValue().equals(client)) {
+                it.remove();
+            }
+        }
         clientAddr.put(publicKey, client);
     }
 

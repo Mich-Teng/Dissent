@@ -29,6 +29,7 @@ public class Controller extends BaseServer {
     Map<BigInteger, BigInteger> voteCollect = new HashMap<BigInteger, BigInteger>();
     private int status = ControllerStatus.CONFIGURATION;
     List<BigInteger> newClientBuffer = new ArrayList<BigInteger>();
+    public Set<Pair<BigInteger,Integer>> voteLog = new HashSet<Pair<BigInteger, Integer>>();
 
 
     public Controller() throws SocketException, UnknownHostException {
@@ -44,6 +45,7 @@ public class Controller extends BaseServer {
         voteCollect.clear();
         newClientBuffer.clear();
         msgSenderList.clear();
+        voteLog.clear();
     }
 
     public Pair<InetAddress, Integer> getLastServer() {

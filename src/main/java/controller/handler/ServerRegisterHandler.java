@@ -44,8 +44,6 @@ public class ServerRegisterHandler implements Handler {
         }
         // add server int topo
         controller.addServer(srcAddr, srcPort);
-        // if we want to support dynamically adding server, we should check
-        // the controller's status and return data to the new coming server
-        // todo
+
     }
 }

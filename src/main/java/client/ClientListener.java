@@ -28,5 +28,6 @@ public class ClientListener extends BaseServerListener {
         handlers[EventType.MESSAGE] = new MsgHandler();
         handlers[EventType.VOTE] = new VoteStartHandler();
         handlers[EventType.ROUND_END] = new RoundEndHandler();
+        handlers[EventType.VOTE_STATUS] = new VoteStatusHandler();
     }
 }

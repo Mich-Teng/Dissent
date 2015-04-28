@@ -1,14 +1,19 @@
 package controller.handler;
 
 import controller.Controller;
+import javafx.util.Pair;
 import proto.EventMsg;
+import proto.EventType;
 import template.BaseServer;
 import template.Handler;
 import util.ElGamal;
+import util.Utilities;
 
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.security.MessageDigest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ***************************************************************
@@ -22,7 +27,7 @@ import java.security.MessageDigest;
 
 public class VoteHandler implements Handler {
     @Override
-    public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
+    public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int srcPort) {
         // collect the result in a temp variable, almost the same with msg handler
         // verify the identification of the client
         Controller controller = (Controller) server;
@@ -31,6 +36,9 @@ public class VoteHandler implements Handler {
         BigInteger[] signature = (BigInteger[]) eventMsg.getField("signature");
         BigInteger nym = (BigInteger) eventMsg.getField("nym");
         eventMsg.remove("signature");
+        Map<String, Object> reply = new HashMap<String, Object>();
+        reply.put("status", false);
+        
         try {
             // hash the message
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -41,11 +49,19 @@ public class VoteHandler implements Handler {
                 // the client pass the verification, collect vote
                 // args[0] is msgid, args[1] is vote
                 String[] args = text.split(";");
-                BigInteger targetNym = controller.getMsgNym(Integer.parseInt(args[0]));
-                controller.addVote(targetNym, new BigInteger(args[1]));
+                Integer msgId = Integer.parseInt(args[0]);
+                
+                if(!controller.voteLog.contains(new Pair<BigInteger, Integer>(nym,msgId))) {
+                    BigInteger targetNym = controller.getMsgNym(msgId);
+                    controller.addVote(targetNym, new BigInteger(args[1]));
+                    reply.put("status",true);
+                    controller.voteLog.add(new Pair<BigInteger, Integer>(nym,msgId));
+                }
             }
         } catch (Exception e) {
             System.out.println("Fail to calculate hash of text!");
         }
+        EventMsg replyMsg = new EventMsg(EventType.VOTE_STATUS, controller.getIdentifier(), reply);
+        Utilities.send(controller.getSocket(), Utilities.serialize(replyMsg), srcAddr, srcPort);
     }
 }
