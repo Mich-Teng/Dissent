@@ -164,6 +164,7 @@ public class ElGamal {
         BigInteger[] ret = new BigInteger[2];
         BigInteger one = new BigInteger("1");
         // generate a random prime which is less than p
+        /*
         BigInteger k = BigInteger.probablePrime(p.bitLength() - 1, rng);
         while (p.subtract(one).mod(k).equals(new BigInteger("0")))
             k = BigInteger.probablePrime(p.bitLength() - 1, rng);
@@ -172,6 +173,9 @@ public class ElGamal {
         while (!k.gcd(p.subtract(one)).equals(one)) {
             k = new BigInteger(p.bitLength() - 1, rng);
         }
+        */
+        BigInteger k = ElGamal.generateQ(p);
+  
         BigInteger dividend = p.subtract(one);
         ret[0] = g.modPow(k, p);
         // s = k-1(m− xr) mod p−1
@@ -179,6 +183,20 @@ public class ElGamal {
         ret[1] = ret[1].multiply(k.modInverse(dividend));
         ret[1] = ret[1].mod(dividend);
         return ret;
+    }
+
+    /**
+     * * generate a prime number which is less than p 
+     * @param p big prime number
+     * @return q
+     */
+    public static BigInteger generateQ(BigInteger p) {
+        Random rng = new SecureRandom();
+        BigInteger one = new BigInteger("1");
+        BigInteger k = BigInteger.probablePrime(p.bitLength() - 1, rng);
+        while (p.subtract(one).mod(k).equals(new BigInteger("0")) || !k.gcd(p.subtract(one)).equals(one))
+            k = BigInteger.probablePrime(p.bitLength() - 1, rng);
+        return k;
     }
 
     /**
