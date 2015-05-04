@@ -25,12 +25,15 @@ import java.util.Map;
  * ****************************************************************
  */
 
+/**
+ * * Handler for VOTE event 
+ */
 public class VoteHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int srcPort) {
         // collect the result in a temp variable, almost the same with msg handler
-        // verify the identification of the client
         Controller controller = (Controller) server;
+        // get necessary info from request
         BigInteger g = controller.getGenerator();
         String text = (String) eventMsg.getField("text");
         BigInteger[] signature = (BigInteger[]) eventMsg.getField("signature");
@@ -38,7 +41,7 @@ public class VoteHandler implements Handler {
         eventMsg.remove("signature");
         Map<String, Object> reply = new HashMap<String, Object>();
         reply.put("status", false);
-        
+        // verify the identification of the client
         try {
             // hash the message
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -46,11 +49,10 @@ public class VoteHandler implements Handler {
             BigInteger data = new BigInteger(1, hash);
             // verification
             if (ElGamal.verify(nym, data, signature[0], signature[1], g, controller.getPrime())) {
-                // the client pass the verification, collect vote
-                // args[0] is msgid, args[1] is vote
+                // the client pass the verification, collect vote args[0] is msgid, args[1] is vote
                 String[] args = text.split(";");
                 Integer msgId = Integer.parseInt(args[0]);
-                
+                // return the true status
                 if(!controller.voteLog.contains(new Pair<BigInteger, Integer>(nym,msgId))) {
                     BigInteger targetNym = controller.getMsgNym(msgId);
                     controller.addVote(targetNym, new BigInteger(args[1]));
@@ -61,6 +63,7 @@ public class VoteHandler implements Handler {
         } catch (Exception e) {
             System.out.println("Fail to calculate hash of text!");
         }
+        // send confirmation to user-side
         EventMsg replyMsg = new EventMsg(EventType.VOTE_STATUS, controller.getIdentifier(), reply);
         Utilities.send(controller.getSocket(), Utilities.serialize(replyMsg), srcAddr, srcPort);
     }

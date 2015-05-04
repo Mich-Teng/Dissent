@@ -18,10 +18,14 @@ import java.net.InetAddress;
  * ****************************************************************
  */
 
+/**
+ * * Handler for REGISTER CONFIRMATION EVENT 
+ */
 public class RegisterConfirmationHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
         DissentClient dissentClient = (DissentClient) server;
+        // set current status of client
         dissentClient.setStatus(ClientStatus.CONNECTED);
         // simply print out register success info here
         System.out.println("[client] Register success. Waiting for new round begin...");

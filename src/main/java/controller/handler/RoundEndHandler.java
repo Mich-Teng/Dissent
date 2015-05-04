@@ -25,19 +25,22 @@ import java.util.Map;
  * ****************************************************************
  */
 
+/**
+ * * Handler for ROUND_END event
+ * * sync reputation map to all servers
+ * * send user round end notification
+ */
 public class RoundEndHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
-        // This event is triggered when server finishe announcement
+        // This event is triggered when server finishes Vote
         Controller controller = (Controller) server;
         // distribute final reputation map to servers
         List<Pair<BigInteger, BigInteger>> repList = (List<Pair<BigInteger, BigInteger>>) eventMsg.getField("rep_list");
         Map<BigInteger, BigInteger> repMap = new HashMap<BigInteger, BigInteger>();
-
         for (Pair<BigInteger, BigInteger> pair : repList) {
             repMap.put(pair.getKey(), pair.getValue());
         }
-
         Map<String, Object> serverMap = new HashMap<String, Object>();
         serverMap.put("rep_map", repMap);
         EventMsg serverMsg = new EventMsg(EventType.SYNC_REPMAP, controller.getIdentifier(), serverMap);
@@ -45,18 +48,21 @@ public class RoundEndHandler implements Handler {
         for (Pair<InetAddress, Integer> pair : serverList) {
             Utilities.send(controller.getSocket(), Utilities.serialize(serverMsg), pair.getKey(), pair.getValue());
         }
+        
         // send user round-end message
         EventMsg clientMsg = new EventMsg(EventType.ROUND_END, controller.getIdentifier(), new HashMap<String, Object>());
         Map<BigInteger, Pair<InetAddress, Integer>> clientList = controller.getClientList();
         for (Pair<InetAddress, Integer> pair : clientList.values()) {
             Utilities.send(controller.getSocket(), Utilities.serialize(clientMsg), pair.getKey(), pair.getValue());
         }
+        
         // sleep for 0.5 sec to wait server to sync data
         try {
             Thread.sleep(500);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // set status and ready for next round
         controller.setStatus(ControllerStatus.READY_FOR_NEW_ROUND);
     }
 }

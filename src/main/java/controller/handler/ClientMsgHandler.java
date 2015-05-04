@@ -24,19 +24,23 @@ import java.util.Random;
  * ****************************************************************
  */
 
+/**
+ * * Handler for MESSAGE event
+ * * accept the message from client, verify the identity and deliver to one server to process 
+ */
 public class ClientMsgHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
-        // verify the identification of the client
         Controller controller = (Controller) server;
+        // get info from the request
         BigInteger g = controller.getGenerator();
         String text = (String) eventMsg.getField("text");
         BigInteger[] signature = (BigInteger[]) eventMsg.getField("signature");
         BigInteger nym = (BigInteger) eventMsg.getField("nym");
         eventMsg.remove("signature");
-
+        // print out debug info
         System.out.println("[debug] Receiving msg from " + srcAddr + ":" + port + ": " + text);
-
+        // verify the identification of the client
         try {
             // hash the message
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -48,7 +52,7 @@ public class ClientMsgHandler implements Handler {
                 // generate msg id
                 Integer msgID = controller.addMsgLog(nym);
                 eventMsg.add("msgID", msgID);
-
+                // randomly send it to a server
                 Random random = new Random();
                 List<Pair<InetAddress, Integer>> serverList = controller.getServerList();
                 int index = random.nextInt(serverList.size());

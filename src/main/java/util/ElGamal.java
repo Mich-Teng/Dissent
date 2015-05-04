@@ -152,6 +152,14 @@ public class ElGamal {
         return sign(p, g, privateKey, data);
     }
 
+    /**
+     * * Using ElGmal signature to sign data 
+     * @param p big prime number
+     * @param g generator
+     * @param privateKey private key
+     * @param data data to be signed
+     * @return signed key pair
+     */
     public BigInteger[] sign(BigInteger p, BigInteger g, BigInteger privateKey, BigInteger data) {
         BigInteger[] ret = new BigInteger[2];
         BigInteger one = new BigInteger("1");
@@ -173,9 +181,17 @@ public class ElGamal {
         return ret;
     }
 
+    /**
+     * * verify the signature
+     * @param publicKey public key
+     * @param data signed data
+     * @param r private key
+     * @param s signature
+     * @param g generator
+     * @param p big prime number
+     * @return true if verified
+     */
     public static boolean verify(BigInteger publicKey, BigInteger data, BigInteger r, BigInteger s, BigInteger g, BigInteger p) {
         return g.modPow(data, p).equals((publicKey.modPow(r, p).multiply(r.modPow(s, p))).mod(p));
     }
-
-
 }

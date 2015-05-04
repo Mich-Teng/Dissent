@@ -23,16 +23,20 @@ import java.util.Map;
  * ****************************************************************
  */
 
+/**
+ * * Handler for REGISTER event
+ * * send the register request to server to do encryption
+ */
 public class ClientRegisterHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer baseServer, InetAddress srcAddr, int srcPort) {
         Controller controller = (Controller) baseServer;
         // add client to current map. Currently, we store this data in controller. However, we could
         // randomly assign a server to deal with the client, which has a better load balance
-        // todo
+
         BigInteger publicKey = (BigInteger) eventMsg.getField("public_key");
         controller.addClient(publicKey, new Pair<InetAddress, Integer>(srcAddr, srcPort));
-        // send register info info to the first server
+        // send register info to the first server
         Pair<InetAddress, Integer> firstServer = controller.getFirstServer();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("public_key", publicKey);

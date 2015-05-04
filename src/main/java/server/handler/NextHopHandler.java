@@ -18,6 +18,10 @@ import java.net.InetAddress;
  * ****************************************************************
  */
 
+/**
+ * * Handler for NEXT_HOP event
+ * * set next hop of server
+ */
 public class NextHopHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer baseServer, InetAddress srcAddr, int port) {

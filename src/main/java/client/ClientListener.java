@@ -20,6 +20,10 @@ public class ClientListener extends BaseServerListener {
         super(client);
     }
 
+    /**
+     * * register handler for each event
+     * @param handlers handler arrays
+     */
     @Override
     protected void assignHandlers(Handler[] handlers) {
         // assign the handlers for controller

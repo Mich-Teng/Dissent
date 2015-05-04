@@ -19,6 +19,10 @@ import java.net.InetAddress;
  * ****************************************************************
  */
 
+/**
+ * * Handler for VOTE_STATUS event
+ * * print out info based on the return packet
+ */
 public class VoteStatusHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {

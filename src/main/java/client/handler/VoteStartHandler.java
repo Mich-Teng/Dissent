@@ -18,12 +18,17 @@ import java.net.InetAddress;
  * ****************************************************************
  */
 
+/**
+ * * Handler for VOTE_STATUS event 
+ */
 public class VoteStartHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
         DissentClient dissentClient = (DissentClient) server;
+        // check the current status. Only after message phase can the vote phase starts
         if (dissentClient.getStatus() != ClientStatus.MESSAGE)
             return;
+        // print out info in client side
         System.out.println("*** [client] Vote Phase begins. Vote using the format... ***");
         System.out.println("vote <msg_id> (+-)1");
         dissentClient.setStatus(ClientStatus.VOTE);

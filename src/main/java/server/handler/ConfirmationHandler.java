@@ -18,6 +18,9 @@ import java.net.InetAddress;
  * ****************************************************************
  */
 
+/**
+ * * Handler for REGISTER_CONFIRMATION event
+ */
 public class ConfirmationHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int srcPort) {

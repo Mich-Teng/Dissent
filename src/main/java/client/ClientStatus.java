@@ -11,7 +11,9 @@ package client;
  */
 
 public class ClientStatus {
+    // configuration
     public static final int CONFIGURATION = 0;
+    // connected with server
     public static final int CONNECTED = 1;
     // in message status, user can send message
     public static final int MESSAGE = 2;

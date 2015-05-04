@@ -22,13 +22,20 @@ import java.util.Collection;
  * ****************************************************************
  */
 
+/**
+ * * Handler for MESSAGE event
+ * * broadcast messages to all clients
+ */
 public class ClientMsgHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
         DissentServer dissentServer = (DissentServer) server;
+        // get the One-time pseudo name from client
         BigInteger nym = (BigInteger) eventMsg.getField("nym");
         BigInteger rep = dissentServer.getReputationMap().get(nym);
+        // subtract the offset
         eventMsg.add("rep", rep.subtract(Config.OFFSET));
+        // print out debug info
         System.out.println("[server] Receiving msg from " + srcAddr + ":" + port);
         // Currently just send the msg to all the clients with nym and reputation
         Collection<Pair<InetAddress, Integer>> clients = dissentServer.getClientList().values();

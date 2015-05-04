@@ -19,6 +19,9 @@ import java.util.Map;
  * ****************************************************************
  */
 
+/**
+ * * Handler for synchronize reputation event
+ */
 public class SyncRepHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {

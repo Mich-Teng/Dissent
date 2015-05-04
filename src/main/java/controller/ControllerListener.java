@@ -23,6 +23,10 @@ public class ControllerListener extends BaseServerListener {
         super(controller);
     }
 
+    /**
+     * * register handler for each event
+     * @param handlers handler arrays
+     */
     @Override
     protected void assignHandlers(Handler[] handlers) {
         // assign the handlers for controller

@@ -14,6 +14,9 @@ import java.net.InetAddress;
  * ****************************************************************
  */
 
+/**
+ * * interface for handler
+ */
 public interface Handler {
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port);
 }

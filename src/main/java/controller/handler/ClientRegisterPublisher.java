@@ -23,6 +23,10 @@ import java.util.HashMap;
  * ****************************************************************
  */
 
+/**
+ * * Handler for CLIENT_REGISTER_SERVERSIDE event 
+ * * publish the client data to all the servers
+ */
 public class ClientRegisterPublisher implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {

@@ -26,12 +26,13 @@ import java.util.Map;
  */
 
 /**
- * finish announcement and send start message signal to the clients
+ * * Handler for ANNOUNCEMENT event 
+ * * finish announcement and send start message signal to the clients
  */
 public class AnnouncementHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
-        // This event is triggered when server finishe announcement
+        // This event is triggered when server finishes announcement
         Controller controller = (Controller) server;
         // distribute final reputation map to servers
         List<Pair<BigInteger, BigInteger>> repList = (List<Pair<BigInteger, BigInteger>>) eventMsg.getField("rep_list");
@@ -39,7 +40,7 @@ public class AnnouncementHandler implements Handler {
         for (Pair<BigInteger, BigInteger> pair : repList) {
             repMap.put(pair.getKey(), pair.getValue());
         }
-
+        // send reputation map to all servers
         Map<String, Object> serverMap = new HashMap<String, Object>();
         serverMap.put("rep_map", repMap);
         EventMsg serverMsg = new EventMsg(EventType.SYNC_REPMAP, controller.getIdentifier(), serverMap);
@@ -47,10 +48,11 @@ public class AnnouncementHandler implements Handler {
         for (Pair<InetAddress, Integer> pair : serverList) {
             Utilities.send(controller.getSocket(), Utilities.serialize(serverMsg), pair.getKey(), pair.getValue());
         }
+        
+        
         BigInteger g = (BigInteger) eventMsg.getField("g");
         // distribute g and hash table of ids to user
         Map<String, Object> clientMap = new HashMap<String, Object>();
-        //     clientMap.put("client_list",repMap.keySet());
         clientMap.put("g", eventMsg.getField("g"));
         clientMap.put("p", controller.getPrime());
         EventMsg clientMsg = new EventMsg(EventType.ANNOUNCEMENT, controller.getIdentifier(), clientMap);
@@ -61,6 +63,5 @@ public class AnnouncementHandler implements Handler {
         // set controller's new g
         controller.setGenerator(g);
         controller.setStatus(ControllerStatus.MESSAGE);
-
     }
 }

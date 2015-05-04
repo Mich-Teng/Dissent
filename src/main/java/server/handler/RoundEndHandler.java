@@ -25,6 +25,11 @@ import java.util.*;
  * ****************************************************************
  */
 
+/**
+ * * Handler for ROUND_END event 
+ * * collect the vote in current round, perform reverse actions
+ * * of announcement phase, and shuffle
+ */
 public class RoundEndHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
@@ -43,22 +48,27 @@ public class RoundEndHandler implements Handler {
                     // use voteOffset to update the reputation
                     list.add(new Pair<BigInteger, BigInteger>(key, entry.getValue().add(voteOffset.get(key))));
                 } else {
+                    // add vote offset into list
                     list.add(new Pair<BigInteger, BigInteger>(key, entry.getValue()));
                 }
             }
+            // add new client into our reputation list
+            // so that the client's reputation could be rolled back
             List<BigInteger> newClient = (List<BigInteger>) eventMsg.getField("new_client");
             for (BigInteger key : newClient) {
                 list.add(new Pair<BigInteger, BigInteger>(key, Config.OFFSET));
             }
         } else {
+            // get the reputation list from previous server
             list = (List<Pair<BigInteger, BigInteger>>) eventMsg.getField("rep_list");
         }
+        
+        
         Map<BigInteger, BigInteger> keyMap = dissentServer.getKeyMap();
         List<Pair<BigInteger, BigInteger>> newList = new ArrayList<Pair<BigInteger, BigInteger>>();
         // calculate a in ElGmal
         Random rng = new SecureRandom();
         BigInteger y = new BigInteger(dissentServer.getPrime().bitLength() - 1, rng);
-        ;
         BigInteger a = dissentServer.getGenerator().modPow(y, dissentServer.getPrime());
         dissentServer.setA(a);
         for (Pair<BigInteger, BigInteger> pair : list) {

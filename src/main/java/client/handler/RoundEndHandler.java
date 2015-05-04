@@ -18,11 +18,17 @@ import java.net.InetAddress;
  * ****************************************************************
  */
 
+/**
+ * * Handler for ROUND_END event
+ * * reset the status and prepare for the new round 
+ */
 public class RoundEndHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
         DissentClient dissentClient = (DissentClient) server;
+        // reset the status
         dissentClient.setStatus(ClientStatus.CONNECTED);
+        // print out info in the client side
         System.out.println("[client] Round ended. Waiting for new round start...");
         System.out.println("Please wait for the next round to start");
     }

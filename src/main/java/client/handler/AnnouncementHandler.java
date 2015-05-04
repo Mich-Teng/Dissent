@@ -19,15 +19,20 @@ import java.net.InetAddress;
  * ****************************************************************
  */
 
+/**
+ * Handle the announcement event in client-side
+ * get One-time pseudonym from server and start message phase
+ */
 public class AnnouncementHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
         DissentClient dissentClient = (DissentClient) server;
-        //     Set<BigInteger> clientList = (Set<BigInteger>)eventMsg.getField("client_list");
+        // get shared g for this round from server
         BigInteger g = (BigInteger) eventMsg.getField("g");
         BigInteger p = (BigInteger) eventMsg.getField("p");
+        // calculate One-time pseudonym based on y = g^x mod p
         BigInteger oneTimePseudonym = g.modPow(dissentClient.getPrivateKey(), p);
-        // set this round's
+        // set this round's One-time pseudonym
         dissentClient.setOneTimePseudonym(oneTimePseudonym);
         dissentClient.setG(g);
         // print out the msg to suggest user to send msg or vote

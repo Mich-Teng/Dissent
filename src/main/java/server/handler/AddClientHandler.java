@@ -18,11 +18,14 @@ import java.net.InetAddress;
  * ****************************************************************
  */
 
+/**
+ * * Handler for ADD_CLIENT event
+ */
 public class AddClientHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
         DissentServer dissentServer = (DissentServer) server;
-        // get the public key and encrypted reputation into map
+        // add the public key and encrypted reputation into map
         BigInteger publicKey = (BigInteger) eventMsg.getField("public_key");
         BigInteger reputation = (BigInteger) eventMsg.getField("reputation");
         dissentServer.addIntoReputationMap(publicKey, reputation);

@@ -23,13 +23,16 @@ import java.util.Map;
  * ****************************************************************
  */
 
+/**
+ * * Handler for client register 
+ * * encrypt reputation and send to next server
+ */
 public class ClientRegisterServerHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer server, InetAddress srcAddr, int port) {
         DissentServer dissentServer = (DissentServer) server;
+        // get the next hop in topology
         Pair<InetAddress, Integer> nextHop = dissentServer.getNextHop();
-
-
         // get the public key and entrypted reputation
         BigInteger publicKey = (BigInteger) eventMsg.getField("public_key");
         Pair<InetAddress, Integer> addr = (Pair<InetAddress, Integer>) eventMsg.getField("addr");
@@ -40,6 +43,7 @@ public class ClientRegisterServerHandler implements Handler {
         BigInteger newKey = dissentServer.rsaEncrypt(publicKey, dissentServer.getPrime());
         map.put("public_key", newKey);
         map.put("addr", addr);
+        // send it to next server
         EventMsg msg = new EventMsg(EventType.CLIENT_REGISTER_SERVERSIDE, dissentServer.getIdentifier(), map);
         Utilities.send(dissentServer.getSocket(), Utilities.serialize(msg), nextHop.getKey(), nextHop.getValue());
         dissentServer.addKeyMapEntry(newKey, publicKey);

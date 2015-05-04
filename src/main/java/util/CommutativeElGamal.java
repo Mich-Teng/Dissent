@@ -217,6 +217,11 @@ public class CommutativeElGamal extends ElGamal {
         return out;
     }
 
+    /**
+     * * Performing ElGmal algorithm to decrypt data
+     * @param data encrypted data
+     * @return decrypted data
+     */
     public BigInteger decrypt(BigInteger[] data) {
         if (data.length > 3) {
             System.err.println("Error! You cannot fully decrypt multiply-encrypted data.");

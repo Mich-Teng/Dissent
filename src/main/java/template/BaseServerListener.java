@@ -25,6 +25,9 @@ public class BaseServerListener implements Runnable {
         this.baseServer = baseServer;
     }
 
+    /**
+     * * launch the listener to listen for events
+     */
     @Override
     public void run() {
         DatagramSocket socket = baseServer.getSocket();

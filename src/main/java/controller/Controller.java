@@ -23,12 +23,19 @@ import java.util.*;
  */
 
 public class Controller extends BaseServer {
+    // network topology for server cluster
     private Topology topology = new Topology();
+    // generator g
     private BigInteger g = null;
+    // 
     List<BigInteger> msgSenderList = new ArrayList<BigInteger>();
+    // collect vote for this round
     Map<BigInteger, BigInteger> voteCollect = new HashMap<BigInteger, BigInteger>();
+    // initialize the controller status
     private int status = ControllerStatus.CONFIGURATION;
+    // buffer for new clients joined during this round
     List<BigInteger> newClientBuffer = new ArrayList<BigInteger>();
+    // log info for all the votes
     public Set<Pair<BigInteger,Integer>> voteLog = new HashSet<Pair<BigInteger, Integer>>();
 
 

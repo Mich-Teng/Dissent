@@ -22,13 +22,16 @@ import java.util.Map;
  * ****************************************************************
  */
 
+/**
+ * * Handler for SERVER_REGISTER event 
+ * * update the next hop for the last server and add this server to topology
+ */
 public class ServerRegisterHandler implements Handler {
     @Override
     public void execute(EventMsg eventMsg, BaseServer baseServer, InetAddress srcAddr, int srcPort) {
         System.out.println("[debug] Receive the registration info from server " + srcAddr + ":" + srcPort);
         Controller controller = (Controller) baseServer;
-        // assume the server is added in the beginning. Otherwise you should transmit
-        // some data back
+        // assume the server is added in the beginning. 
         Map<String, Object> reply = new HashMap<String, Object>();
         Pair<InetAddress, Integer> pair = controller.getLastServer();
         reply.put("reply", true);
@@ -42,7 +45,7 @@ public class ServerRegisterHandler implements Handler {
             EventMsg updateNextHopMsg = new EventMsg(EventType.UPDATE_NEXT_HOP, controller.getIdentifier(), reply);
             Utilities.send(controller.getSocket(), Utilities.serialize(updateNextHopMsg), pair.getKey(), pair.getValue());
         }
-        // add server int topo
+        // add server int topology
         controller.addServer(srcAddr, srcPort);
 
     }
